@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="alert alert-primary">
+  <h2>Dodaj automobil</h2>
+</div>
+
+  <div class="container">
+        <form method="POST">
+            {% csrf_token %}
+            
+            {% for field in form %}
+              {{ field.label_tag }}
+              {% render_field field class="form-control"%}
+            {% endfor %}
+            <br>
+            <input type="submit" class="btn btn-success" value="Dodaj">
+            <a class="btn btn-outline-danger" href="{% url 'auti_app:lista' %}">Otkaži</a>
+          </form>
+    
+    </div>
+
+{% endblock content %}
+    

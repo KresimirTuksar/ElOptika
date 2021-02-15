@@ -1,0 +1,27 @@
+{% extends 'dash_base.html' %}
+
+{% load widget_tweaks %}
+
+
+{% block frame %}
+    <div class="alert alert-danger">
+        <h2>Jeste li sigurni da želite obrisati "{{queryset}}" u kategoriji "{{item.kategorija}}"?</h2>
+    </div>
+    <br>
+
+
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="d-grid gap-2 col-6 mx-auto">
+            <a class="btn btn-outline-primary" href="{% url 'skladiste_app:skladiste' %}">Otkaži</a>
+            <input class="btn btn-danger" type="submit" value="Potvrdi">
+        </div>
+    </form>
+{% endblock frame %}
+    
+
+{% block sidebar %}
+    
+{% endblock sidebar %}
+    

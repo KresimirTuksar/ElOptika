@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+    
+    
+    {% block content %}
+
+        <div class="alert alert-danger">
+            <h2>Jeste li sigurni da želite obrisati "{{auto}}"?</h2>
+        </div>
+        <br>
+
+    
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="d-grid gap-2 col-6 mx-auto">
+                <a class="btn btn-outline-primary" href="{% url 'auti_app:lista' %}">Otkaži</a>
+                <input class="btn btn-danger" type="submit" value="Potvrdi">
+            </div>
+        </form>
+
+    {% endblock content %}

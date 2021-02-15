@@ -1,0 +1,68 @@
+
+{% extends 'dash_base.html' %}
+
+{% block frame %}
+  <h2>Automobili</h2>
+    
+      
+      
+      <a class="btn btn-primary" href=" {% url 'auti_app:dodaj_automobil' %} ">Dodaj Automobil</a>
+      <br>
+      <br>
+      
+      {% for auto in auti %}
+        <table class="table table-striped table-secondary">
+          <thead>
+            <tr>
+              <th>Auto</th>
+              <th>{{auto.ime}}</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>Proizvođač</td>
+              <td>{{auto.marka}}</td>
+            </tr>
+            <tr>
+              <td>Registarska oznaka</td>
+              <td>{{auto.tablica}}</td>
+            </tr>
+            <tr>
+              <td>Registriran</td>
+              <td>{{auto.registracija}}</td>
+            </tr>
+            <tr>
+              <td>Servisiran</td>
+              <td>{{auto.servis}}</td>
+            </tr>
+            <tr>
+              <td>Servisiran na km</td>
+              <td>{{auto.servis_kilometri}}</td>
+            </tr>
+          </tbody>
+      </table>
+      <a class="btn btn-sm btn-info" href="{% url 'auti_app:uredi_automobil' auto.id %}">Uredi</a>
+      <a class="btn btn-sm btn-danger" href=" {%url 'auti_app:obrisi_automobil' auto.id %}">Obriši</a>
+      <br>
+      <br>
+      <br>
+      {% endfor %}
+      
+    
+{% endblock frame %}
+
+
+{% block sidebar %}
+  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi, recusandae! Ab fugiat ullam dolorum vitae. Consequuntur laboriosam eum temporibus rerum, quisquam cumque provident quia tempora distinctio. Alias id incidunt a.</p>
+  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi, recusandae! Ab fugiat ullam dolorum vitae. Consequuntur laboriosam eum temporibus rerum, quisquam cumque provident quia tempora distinctio. Alias id incidunt a.</p>
+  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi, recusandae! Ab fugiat ullam dolorum vitae. Consequuntur laboriosam eum temporibus rerum, quisquam cumque provident quia tempora distinctio. Alias id incidunt a.</p>
+
+{% endblock sidebar %}
+  
+    
+
+
+
+
+    

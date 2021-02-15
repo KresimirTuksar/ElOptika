@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+<!-- uljepšaj to malo -->
+
+{% block content %}
+
+<div class="container contact">
+    <h2>Kontakt</h2>
+
+    
+    <div class="row">
+        <div class="col-sm">
+            <p>Za sve informacije slobodno nam se obratite:<br>
+                Mob: 091 / 910 3616<br>
+                Fax: 031 / 358 334</p>
+                <p>ili popunite ovaj obrazac<br><br></p>
+        </div>
+        <div class="col-sm">
+        <div class="card">
+            <div class="card-body">
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+
+                    {% if form.is_bound %}
+                    {% if field.errors %}
+                        {% render_field field class="form-control is-invalid" %}
+                        {% for error in field.errors %}
+                        <div class="invalid-feedback">
+                            {{ error }}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        {% render_field field class="form-control is-valid" %}
+                    {% endif %}
+                    {% else %}
+                    {% render_field field class="form-control" %}
+                    {% endif %}
+
+                </div>
+                {% endfor %}
+
+                <input type="submit" class="btn btn-outline-success" value="Pošalji">
+            </form>
+            </div>  
+        </div>
+        </div>
+    </div>
+    <br>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <b>ELEKTRO-OPTIKA d.o.o.</b><br>
+                <p>Sljemenska 2a <br>31000 Osijek</p>
+            </div>
+            <div class="col-sm">
+                <strong> Radno vrijeme:</strong>
+                <p>Pon – Pet <br>8.00 - 16.00 sati</p>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm">
+                <p><strong>OIB: </strong>89209993176 <br><strong>MBS: </strong>030103613</p>
+            </div>
+            <div class="col-sm">
+                <p><strong>Račun kod Erste&Steiermarkische Bank d.d.: </strong>2402006-1100551808 <br>
+                    <strong>IBAN: </strong>HR7224020061100551808 <br>
+                    <strong>SWIFT CODE: </strong>ESBCHR22
+                </p>
+            </div>
+        </div>
+            
+        <br>
+        <div class="row">
+            <div class="col-sm">
+                <p><strong>Članovi uprave: </strong>Tomislav Stojčić<br>
+                    <strong>Temeljni kapital: </strong>20.000,00 kn uplaćen u cijelosti<br>
+                    ELEKTRO-OPTIKA društvo s ograničenom odgovornošću za trgovinu i usluge upisano je pri Trgovačkom sudu u Osijeku.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+{% endblock content %}
