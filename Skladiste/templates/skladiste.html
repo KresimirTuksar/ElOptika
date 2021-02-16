@@ -42,18 +42,27 @@
 {% endblock frame %}
     
 {% block sidebar %}
-    <a href="{% url 'skladiste_app:novi_unos' %}">Novi unos</a><br>
-    <a href="{% url 'skladiste_app:skladiste_history' %}">History</a><br>
-    <a href="{% url 'skladiste_app:dodaj_kategoriju' %}">Dodaj kategoriju</a>
-    <br>
-    <form action="" method="POST">
-    {% csrf_token %}
-    {% for field in form %}
-        {{field.label_tag}}
-        {% render_field field class="form-control" %}
-    {% endfor %}
+    <div>
+        <a href="{% url 'skladiste_app:novi_unos' %}" class = "btn btn-success btn-block">Novi unos</a><br>
+        <a href="{% url 'skladiste_app:skladiste_history' %}" class = "btn btn-primary btn-block">History</a><br>
+        <a href="{% url 'skladiste_app:dodaj_kategoriju' %}" class = "btn btn-primary btn-block">Dodaj kategoriju</a><br>
         
-    <input type="submit" value="Traži">
-</form>
+        <div class="pretraga">
+            <h3>Pretraga</h3>
+            <form action="" method="POST">
+                {% csrf_token %}
+                {% for field in form %}
+                    {{field.label_tag}}
+                    {% render_field field class="form-control" %}
+                {% endfor %}
+                    
+                <input class="btn btn-outline-success btn-block" type="submit" value="Traži">
+            </form>
+        </div>
+        
+    </div>
+    
+    <br>
+    
 {% endblock sidebar %}
     

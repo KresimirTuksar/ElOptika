@@ -1,4 +1,4 @@
-from . forms import DodajKategorijuForm, IzdavanjeForm, ReorderLevelForm, SkladisteCreateForm, SkladisteSearchForm, SkladisteUpdateForm, ZaprimanjeForm
+from . forms import DodajKategorijuForm, IzdavanjeForm, ReorderLevelForm, SkladisteCreateForm, SkladisteSearchForm, SkladisteUpdateForm, ZaprimanjeForm, ZaduzivanjeForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -108,7 +108,9 @@ def izdavanje(request, pk):
             instance.kolicina -= instance.izdana_kolicina
             instance.izdao = str(request.user)
             instance.save()
-            izdavanje_history = SkladisteHistory(
+
+            # kopiranje odabranog objekta u history
+            history = SkladisteHistory(
                 id = instance.id,
                 zadnje_osvjezeno = instance.zadnje_osvjezeno,
                 kategorija_id = instance.kategorija_id,
@@ -118,7 +120,7 @@ def izdavanje(request, pk):
                 izdao = instance.izdao,
                 izdana_kolicina = instance.izdana_kolicina,
             )
-            izdavanje_history.save()
+            history.save()
 
             messages.success(request, 'Uspješno izdano. Još ' + str(instance.kolicina) + ' ' + str(instance.naziv) + ' ostalo na skladištu.')
             return redirect('skladiste_app:skladiste')
@@ -142,7 +144,9 @@ def zaprimanje(request, pk):
             instance.zaprimio = str(request.user)
             instance.save()
             messages.success(request, 'Artikl zaprimljen. Trenutno je ' + str(instance.kolicina) + ' ' + str(instance.naziv) + ' na skladištu.')
-            izdavanje_history = SkladisteHistory(
+
+            #kopiranje odabranog objekta u history
+            history = SkladisteHistory(
                 id = instance.id,
                 zadnje_osvjezeno = instance.zadnje_osvjezeno,
                 kategorija_id = instance.kategorija_id,
@@ -151,7 +155,7 @@ def zaprimanje(request, pk):
                 primljena_kolicina = instance.primljena_kolicina,
                 zaprimio = instance.zaprimio,
             )
-            izdavanje_history.save()
+            history.save()
             return redirect('skladiste_app:skladiste')
 
     context = {'queryset':queryset,
@@ -162,19 +166,21 @@ def zaprimanje(request, pk):
 
     return  render(request, 'izdavanje.html', context)
 
-""" def zaduzivanje(request, pk):
+def zaduzivanje(request, pk):
     queryset = Skladiste.objects.get(id=pk)
-    form = ZaduzivanjeForm(request.POST)
+    form = ZaduzivanjeForm(request.POST, instance=queryset)
+    
 
     if request.method == 'POST':
+        """ povlačenje vrijednosti zi forme za manytomanyfield """
         if form.is_valid():
-            
-            form.save()
-
+            instance = form.save(commit = False)
+            instance.save()
+            form.save_m2m()
             return redirect('skladiste_app:skladiste')
 
-    context = {'form': form}
-    return render(request, 'zaduzivanje.html', context) """
+    context = {'form': form,'queryset':queryset,}
+    return render(request, 'zaduzivanje.html', context)
 
 @login_required
 def reorder_level(request, pk):

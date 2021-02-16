@@ -14,7 +14,8 @@ urlpatterns = [
     path("skladiste/reorder_level/<str:pk>/", views.reorder_level, name='reorder_level'),
     path("skladiste/izdavanje/<str:pk>/", views.izdavanje, name='izdavanje'),
     path("skladiste/zaprimanje/<str:pk>/", views.zaprimanje, name='zaprimanje'),
-    
+    path("skladiste/zaduzivanje/<str:pk>/", views.zaduzivanje, name='zaduzivanje'),
+
     path("skladiste/history", views.skladiste_history, name='skladiste_history'),
 
 ]

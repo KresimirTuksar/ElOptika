@@ -23,7 +23,7 @@ class Skladiste(models.Model):
     izdao = models.CharField(max_length=50, blank=True, null=True)
     izdano_na = models.CharField(max_length=50, blank=True, null=True)
     kreirao = models.CharField(max_length=50, blank=True, null=True)
-    #zaduzio = models.ManyToManyField(User, blank = True)
+    zaduzio = models.ManyToManyField(User, related_name='users', blank = True)
     reorder_level = models.IntegerField(default=0, blank=True, null=True) #kada naručiti
     zadnje_osvjezeno = models.DateField(auto_now=True, auto_now_add=False)
     export_to_CSV = models.BooleanField(default=False) #export u csv format
@@ -41,7 +41,7 @@ class SkladisteHistory(models.Model):
     izdana_kolicina = models.IntegerField(default=0, blank=True ,null=True)
     izdao = models.CharField(max_length=50, blank=True, null=True)
     izdano_na = models.CharField(max_length=50, blank=True, null=True)
-    #zaduzio = models.ManyToManyField(User, blank = True)
+    zaduzio = models.ManyToManyField(User, related_name='skladisteh_zaduzio', blank = True)
     kreirao = models.CharField(max_length=50, blank=True, null=True)
     reorder_level = models.IntegerField(default=0, blank=True, null=True) #kada naručiti
     zadnje_osvjezeno = models.DateField(auto_now=False, auto_now_add=False, null=True)

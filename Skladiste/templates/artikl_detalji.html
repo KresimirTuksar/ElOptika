@@ -20,6 +20,7 @@
         <th>Zadnje uređivano</th>
         <th>Nivo narudžbe</th>
         <th>Zaprimio</th>
+        <th>Zaduzio</th>
     </thead>
 
     
@@ -31,6 +32,12 @@
                 <td>{{queryset.zadnje_osvjezeno}}</td>
                 <td>{{queryset.reorder_level}}</td>
                 <td>{{queryset.zaprimio}}</td>
+                <td>
+                    <!-- ispis usera za manytomany -->
+                    {% for user in queryset.zaduzio.all %}
+                        {{user.first_name}} {{user.last_name}}
+                    {% endfor %}
+                </td>
             </tr>
         </tbody>
     
@@ -38,11 +45,14 @@
 {% endblock frame %}
     
 {% block sidebar %}
-    <a href="{% url 'skladiste_app:novi_unos' %}">Novi unos</a>
-    <a href="{% url 'skladiste_app:uredi_artikl' queryset.id %}">Uredi</a>
-    <a href="{% url 'skladiste_app:izdavanje' queryset.id %}"><div class='btn btn-danger'>IZDAJ ARTIKL</div></a>
-    <a href="{% url 'skladiste_app:zaprimanje' queryset.id %}"><div class='btn btn-primary'>ZAPRIMI ARTIKL</div></a>
-    <a href="{% url 'skladiste_app:obrisi_artikl' queryset.id %}">Obriši</a>
+    <div>
+        <a href="{% url 'skladiste_app:novi_unos' %}" class="btn btn-success btn-block">Novi unos</a>
+        <a href="{% url 'skladiste_app:uredi_artikl' queryset.id %}" class="btn btn-info btn-block">Uredi</a>
+        <a href="{% url 'skladiste_app:izdavanje' queryset.id %}" class='btn btn-outline-primary btn-block'>IZDAJ ARTIKL</a>
+        <a href="{% url 'skladiste_app:zaprimanje' queryset.id %}" class='btn btn-outline-primary btn-block'><div >ZAPRIMI ARTIKL</div></a>
+        <a href="{% url 'skladiste_app:obrisi_artikl' queryset.id %}" class='btn btn-danger btn-block'>Obriši</a>
+        <a href="{% url 'skladiste_app:zaduzivanje' queryset.id %}" class='btn btn-danger btn-block'>Zaduži</a>
+    </div>
     
 
 {% endblock sidebar %}

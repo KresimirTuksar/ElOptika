@@ -64,8 +64,8 @@ class ReorderLevelForm(forms.ModelForm):
         model = Skladiste
         fields = ['reorder_level']
 
-""" class ZaduzivanjeForm(forms.ModelForm):
+class ZaduzivanjeForm(forms.ModelForm):
 
     class Meta:
         model = Skladiste
-        fields = ['kolicina', 'zaduzio'] """
+        fields = ['kolicina', 'zaduzio']
