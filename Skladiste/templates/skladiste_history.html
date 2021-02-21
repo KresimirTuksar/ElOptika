@@ -27,6 +27,13 @@
                     <td><a href="{% url 'skladiste_app:artikl_detalji' item.id %}">{{item.naziv}}</a></td>
                     <td>{{item.kolicina}}</td>
                     <td>{{item.zadnje_osvjezeno}}</td>
+                    <td>{{item.zaduzio.all}}</td>
+                    <td>
+                        <!-- ispis usera za manytomany -->
+                        {% for user in querset.zaduzio.all %}
+                            {{user.first_name}} {{user.last_name}}
+                        {% endfor %}
+                    </td>
                 </tr>
             </tbody>
         {% endfor %}

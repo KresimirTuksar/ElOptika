@@ -32,12 +32,14 @@
                 <td>{{queryset.zadnje_osvjezeno}}</td>
                 <td>{{queryset.reorder_level}}</td>
                 <td>{{queryset.zaprimio}}</td>
+                
                 <td>
                     <!-- ispis usera za manytomany -->
                     {% for user in queryset.zaduzio.all %}
                         {{user.first_name}} {{user.last_name}}
                     {% endfor %}
                 </td>
+                <td>{{queryset.datum_zaduzivanja}}</td>
             </tr>
         </tbody>
     

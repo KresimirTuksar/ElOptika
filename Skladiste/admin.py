@@ -12,3 +12,8 @@ class SkladisteCreateAdmin(admin.ModelAdmin):
 
 admin.site.register(Skladiste, SkladisteCreateAdmin)
 admin.site.register(Kategorija)
+
+admin.site.register(KabelBakar)
+admin.site.register(KabelOptika)
+admin.site.register(KabelUtp)
+admin.site.register(TipKabela)
