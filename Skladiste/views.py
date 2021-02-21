@@ -1,4 +1,4 @@
-from . forms import DodajKategorijuForm, DodajTipForm, IzdavanjeForm, OptikaCreateForm, OptikaIzdajForm, OptikaReorderLevelForm, OptikaSearchForm, OptikaUpdateForm, ReorderLevelForm, SkladisteCreateForm, SkladisteSearchForm, SkladisteUpdateForm, ZaprimanjeForm, ZaduzivanjeForm
+from . forms import DodajKategorijuForm, DodajTipForm, IzdavanjeForm, OptikaCreateForm, OptikaHistorySearchForm, OptikaIzdajForm, OptikaReorderLevelForm, OptikaSearchForm, OptikaUpdateForm, ReorderLevelForm, SkladisteCreateForm, SkladisteSearchForm, SkladisteUpdateForm, ZaprimanjeForm, ZaduzivanjeForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -44,9 +44,6 @@ def listoptika(request):
 
             context = {'form':form, 'queryset':queryset}
     
-                
-    
-
     return render(request,'skladisteoptika.html', context )
 
 
@@ -174,9 +171,36 @@ def optika_reorder_level(request, pk):
 
 @login_required
 def optika_history(request):
+    form = OptikaHistorySearchForm(request.POST)
     queryset = KabelOptikaHistory.objects.all()
+    context = {'queryset':queryset, 'form':form}
+    
+    
+    if request.method == 'POST':
+        queryset = KabelOptikaHistory.objects.filter(naziv__icontains = form['naziv'].value(),
+                                            inv_broj__icontains = form['inv_broj'].value(),
+                                            #tip_kabela__icontains = form['tip_kabela'].value(),
+                                            vlasnik__icontains = form['vlasnik'].value(),
+                                            #izdano_na__icontains = form['izdano_na'].value(),
+                                            radnja__icontains = form['radnja'].value()
+        )
+        
+        if form['export_to_CSV'].value() == True:
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="skladiste_lista.csv"'
 
-    context = {'queryset':queryset}
+            response.write(u'\ufeff'.encode('utf8')) #pravilan prikaz znakova
+            writer = csv.writer(response) 
+            writer.writerow(['NAZIV', 'INVENTURNI BROJ', 'TIP KABELA', 'VLASNIK','BROJ NITI','PROIZVOĐAČ'])
+            instance = queryset
+            for stock in instance:
+                writer.writerow([stock.naziv, stock.inv_broj, stock.tip_kabela, stock.vlasnik, stock.broj_niti, stock.proizvodjac])
+
+            return response
+        else:
+
+            context = {'form':form, 'queryset':queryset}
+
     return render(request, 'optikahistory.html', context)
 ###############
 

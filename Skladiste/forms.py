@@ -97,8 +97,9 @@ class OptikaReorderLevelForm(forms.ModelForm):
         fields = ['reorder_level']
 
 class OptikaHistorySearchForm(forms.ModelForm):
-    model = KabelOptikaHistory
-    fields = ['inv_broj','naziv','proizvodjac','vlasnik','izdano_na','radnja']
+    class Meta:
+        model = KabelOptikaHistory
+        fields = ['inv_broj','naziv','proizvodjac','vlasnik','radnja','export_to_CSV'] #srediti pretragu zaduženja
 
 
 #########
