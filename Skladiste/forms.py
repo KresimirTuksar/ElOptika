@@ -24,22 +24,17 @@ class OptikaCreateForm(forms.ModelForm):
         broj_niti = self.cleaned_data.get('broj_niti')
         metraza = self.cleaned_data.get('metraza')
             
-      
-            
-        
-        
-        
-
       # ovjera jesu li polja popunjena
         if not inv_broj :
             self._errors['inv_broj'] = self.error_class(['Ovo polje je obavezno'])
         
-        #if inv_broj < 1 :
-        #    self._errors['inv_broj'] = self.error_class(['Inventurni broj mora biti pozitivan'])
+        if inv_broj < 1 :
+            self._errors['inv_broj'] = self.error_class(['Inventurni broj mora biti pozitivan'])
 
         for instance  in KabelOptika.objects.all():
             if instance.inv_broj == inv_broj:
                 self._errors['inv_broj'] = self.error_class(['Inventurni broj več postoji!'])
+
 
         if not naziv:
             self._errors['naziv'] = self.error_class(['Ovo polje je obavezno'])
@@ -60,12 +55,7 @@ class OptikaCreateForm(forms.ModelForm):
         return self.cleaned_data
 
         
-            
-        #prevencija duplih unosa
-    
-        
-      #  return tip
-    
+
 
 class DodajTipForm(forms.ModelForm):
     class Meta:
@@ -75,7 +65,7 @@ class DodajTipForm(forms.ModelForm):
 class OptikaSearchForm(forms.ModelForm):
     class Meta:
         model = KabelOptika
-        fields = ['naziv','inv_broj','vlasnik','broj_niti','proizvodjac','export_to_CSV']
+        fields = ['naziv','inv_broj','tip_kabela','vlasnik','broj_niti','proizvodjac','export_to_CSV']
 
 class OptikaUpdateForm(forms.ModelForm):
     class Meta:
@@ -87,8 +77,21 @@ class OptikaIzdajForm(forms.ModelForm):
         model = KabelOptika
         fields = ['izdana_metraza', 'izdano_na','radnja']
 
-        
+    def clean(self):
+            super(OptikaIzdajForm, self).clean()
+
+            izdana_metraza = self.cleaned_data.get('izdana_metraza')
+            izdano_na = self.cleaned_data.get('izdano_na')
+            radnja = self.cleaned_data.get("radnja")
             
+            if not izdana_metraza:
+                self._errors['izdana_metraza'] = self.error_class(['Ovo polje je obavezno'])
+            if not izdano_na:
+                self._errors['izdano_na'] = self.error_class(['Ovo polje je obavezno'])
+            if not radnja:
+                self._errors['radnja'] = self.error_class(['Ovo polje je obavezno'])
+
+            return self.cleaned_data
 
 
 class OptikaReorderLevelForm(forms.ModelForm):
@@ -99,7 +102,7 @@ class OptikaReorderLevelForm(forms.ModelForm):
 class OptikaHistorySearchForm(forms.ModelForm):
     class Meta:
         model = KabelOptikaHistory
-        fields = ['inv_broj','naziv','proizvodjac','vlasnik','radnja','export_to_CSV'] #srediti pretragu zaduženja
+        fields = ['inv_broj','naziv','tip_kabela','proizvodjac','vlasnik','radnja','export_to_CSV'] #srediti pretragu zaduženja
 
 
 #########

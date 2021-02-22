@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import  Model
-from django.db.models.fields import CharField, DateTimeField, PositiveIntegerField
+from django.db.models.fields import CharField, DateTimeField, IntegerField, PositiveIntegerField
 from django.contrib.auth.models import User
 from django.forms.widgets import DateTimeInput
 
@@ -100,14 +100,14 @@ class TipKabela(models.Model):
 
 
 class KabelOptika(models.Model):
-    inv_broj = PositiveIntegerField(blank=True, null=True, verbose_name='Inventurni broj')
+    inv_broj = IntegerField(default=0, blank=True, null=True, verbose_name='Inventurni broj')
     naziv = models.CharField(max_length=50, verbose_name="Naziv", blank=True, null=True)
     proizvodjac = models.CharField(blank=True, null=True, verbose_name='Proizvođač', max_length=50)
     vlasnik = models.CharField(max_length=50, verbose_name="Vlasnik", blank=True, null=True,)
     tip_kabela = models.ForeignKey(TipKabela, verbose_name="Tip kabela", blank=True, null=True, on_delete=models.CASCADE)
-    broj_niti = PositiveIntegerField(blank=True, null=True, verbose_name='Broj niti')
+    broj_niti = IntegerField(blank=True, null=True, verbose_name='Broj niti')
     metraza = models.IntegerField(default=0, blank=True, null=True,verbose_name='Ukupna metraža')
-    izdana_metraza = models.PositiveIntegerField(blank=True, null=True, verbose_name='Izdano metara')
+    izdana_metraza = models.IntegerField(blank=True, null=True, verbose_name='Izdano metara')
     izdano_na = models.ForeignKey(User, blank=True, null=True, verbose_name="Izdaj na", on_delete=models.CASCADE)
     izdao = models.CharField(max_length=50, blank=True, null=True)
     kreirao = models.CharField(max_length=50, blank=True, null=True)
@@ -120,14 +120,14 @@ class KabelOptika(models.Model):
         return self.naziv
 
 class KabelOptikaHistory(models.Model):
-    inv_broj = PositiveIntegerField(blank=True, null=True, verbose_name='Inventurni broj')
+    inv_broj = IntegerField(blank=True, null=True, verbose_name='Inventurni broj')
     naziv = models.CharField(max_length=50, verbose_name="Naziv", blank=True, null=True)
     proizvodjac = models.CharField(blank=True, null=True, verbose_name='Proizvođač', max_length=50)
     vlasnik = models.CharField(max_length=50, verbose_name="Vlasnik", blank=True, null=True,)
     tip_kabela = models.ForeignKey(TipKabela, verbose_name="Tip kabela", blank=True, null=True, on_delete=models.CASCADE)
-    broj_niti = PositiveIntegerField(default=1, verbose_name='Broj niti')
-    metraza = models.PositiveIntegerField(default=0,verbose_name='Ukupna metraža')
-    izdana_metraza = models.PositiveIntegerField(blank=True, null=True, verbose_name='Izdano metara')
+    broj_niti = IntegerField(default=1, verbose_name='Broj niti')
+    metraza = models.IntegerField(default=0,verbose_name='Ukupna metraža')
+    izdana_metraza = models.IntegerField(blank=True, null=True, verbose_name='Izdano metara')
     izdano_na = models.ForeignKey(User, blank=True, null=True, verbose_name="Izdaj na", on_delete=models.CASCADE)
     izdao = models.CharField(max_length=50, blank=True, null=True)
     kreirao = models.CharField(max_length=50, blank=True, null=True)

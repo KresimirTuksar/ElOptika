@@ -19,14 +19,17 @@ def listoptika(request):
     
     
     if request.method == 'POST':
+        tip_kabela = int(form['tip_kabela'].value)
         queryset = KabelOptika.objects.filter(naziv__icontains = form['naziv'].value(),
                                             inv_broj__icontains = form['inv_broj'].value(),
-                                            #tip_kabela__icontains = form['tip_kabela'].value(),
+                                            #tip_kabela__tip__contains = form['tip_kabela'].value(),
                                             vlasnik__icontains = form['vlasnik'].value(),
                                             broj_niti__icontains = form['broj_niti'].value(),
                                             proizvodjac__icontains = form['proizvodjac'].value()
         
         )
+        if (tip_kabela != ''):
+            queryset = queryset.filter(tip_kabela_id = tip_kabela)
 
         if form['export_to_CSV'].value() == True:
             response = HttpResponse(content_type='text/csv')
@@ -112,12 +115,13 @@ def optika_izdaj(request, pk):
             instance = form.save(commit=False)
             instance.metraza -= instance.izdana_metraza
             instance.izdao = str(request.user)
-            if instance.metraza >=0:
+            if (instance.metraza >=0):
                 messages.success(request, 'Uspješno izdano. Još ' + str(instance.metraza) + ' ' + str(instance.naziv) + ' ostalo na skladištu.')
+                instance.save()
             else:
                 messages.error(request,'Nedovoljno kabela')
-            instance.save()
-
+                context = {'queryset':queryset,'form':form}
+                
             # kopiranje odabranog objekta u history
             history = KabelOptikaHistory.objects.create(
                 #id = instance.id,
@@ -179,6 +183,7 @@ def optika_history(request):
     if request.method == 'POST':
         queryset = KabelOptikaHistory.objects.filter(naziv__icontains = form['naziv'].value(),
                                             inv_broj__icontains = form['inv_broj'].value(),
+                                            proizvodjac__icontains = form['proizvodjac'].value(),
                                             #tip_kabela__icontains = form['tip_kabela'].value(),
                                             vlasnik__icontains = form['vlasnik'].value(),
                                             #izdano_na__icontains = form['izdano_na'].value(),
