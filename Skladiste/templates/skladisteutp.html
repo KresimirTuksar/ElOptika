@@ -14,14 +14,13 @@
        </ul>
   {% endif %}
 
-<table class="table table-responsive-sm table-striped table-secondary">
+<table class="table table-sm table-responsive-sm table-striped table-secondary">
     <thead>
         <th>Inventurni broj</th>
         <th>Naziv</th>
         <th>tip kabela</th>
         <th>proizvođač</th>
         <th>vlasnik</th>
-        <th>Broj niti</th>
         <th>Preostalo metara</th>
     </thead>
 
@@ -29,12 +28,19 @@
         <tbody>
             <tr>
                 <td>{{item.inv_broj}}</td>
-                <td><a href="{% url 'skladiste_app:optika_detalji' item.id %}">{{item.naziv}}</a></td>
+                <td><a href="{% url 'skladiste_app:utp_detalji' item.id %}">{{item.naziv}}</a></td>
                 <td>{{item.tip_kabela}}</td>
                 <td>{{item.proizvodjac}}</td>
                 <td>{{item.vlasnik}}</td>
-                <td>{{item.broj_niti}}</td>
-                <td>{{item.metraza}}</td>
+                <td>
+                    {% if item.metraza <= item.reorder_level %}
+                        <div style="background-color: red;">
+                            {{item.metraza}}
+                        </div>
+                    {% else %}
+                        {{item.metraza}}
+                    {% endif %}
+                </td>
             </tr>
         </tbody>
     {% endfor %}
@@ -43,9 +49,9 @@
     
 {% block sidebar %}
     <div>
-        <a href="{% url 'skladiste_app:optika_dodaj' %}" class = "btn btn-success btn-block">Novi unos</a><br>
+        <a href="{% url 'skladiste_app:utp_dodaj' %}" class = "btn btn-success btn-block">Novi unos</a><br>
         <a href="{% url 'skladiste_app:dodaj_tip' %}" class = "btn btn-primary btn-block">Novi tip kabela</a><br>
-        <a href="{% url 'skladiste_app:optika_history' %}" class = "btn btn-primary btn-block">History</a><br>
+        <a href="{% url 'skladiste_app:utp_history' %}" class = "btn btn-primary btn-block">History</a><br>
         
         
         <div class="pretraga">

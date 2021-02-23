@@ -105,6 +105,188 @@ class OptikaHistorySearchForm(forms.ModelForm):
         fields = ['inv_broj','naziv','tip_kabela','proizvodjac','vlasnik','radnja','export_to_CSV'] #srediti pretragu zaduženja
 
 
+#Kablovi - BAKAR
+
+class BakarCreateForm(forms.ModelForm):
+    
+    class Meta:
+        model = KabelBakar
+        fields = ['inv_broj','vlasnik','tip_kabela','proizvodjac', 'naziv','broj_pari','metraza']
+
+
+    def clean(self):
+        super(BakarCreateForm, self).clean()
+
+      # dohvacanje vrijednosti u poljima
+        inv_broj = self.cleaned_data.get('inv_broj')
+        naziv = self.cleaned_data.get('naziv')
+        vlasnik = self.cleaned_data.get("vlasnik")
+        tip_kabela = self.cleaned_data.get("tip_kabela")
+        broj_pari = self.cleaned_data.get('broj_pari')
+        metraza = self.cleaned_data.get('metraza')
+            
+      # ovjera jesu li polja popunjena
+        if not inv_broj :
+            self._errors['inv_broj'] = self.error_class(['Ovo polje je obavezno'])
+        
+        if inv_broj < 1 :
+            self._errors['inv_broj'] = self.error_class(['Inventurni broj mora biti pozitivan'])
+
+        for instance  in KabelBakar.objects.all():
+            if instance.inv_broj == inv_broj:
+                self._errors['inv_broj'] = self.error_class(['Inventurni broj več postoji!'])
+
+
+        if not naziv:
+            self._errors['naziv'] = self.error_class(['Ovo polje je obavezno'])
+        if not vlasnik:
+            self._errors['vlasnik'] = self.error_class(['Ovo polje je obavezno'])
+        if not tip_kabela:
+            self._errors['tip_kabela'] = self.error_class(['Ovo polje je obavezno'])
+        if not broj_pari:
+            self._errors['broj_pari'] = self.error_class(['Ovo polje je obavezno'])
+        if not metraza:
+            self._errors['metraza'] = self.error_class(['Ovo polje je obavezno'])
+
+        return self.cleaned_data
+
+
+
+class BakarSearchForm(forms.ModelForm):
+    class Meta:
+        model = KabelBakar
+        fields = ['naziv','inv_broj','tip_kabela','vlasnik','broj_pari','proizvodjac','export_to_CSV']
+
+class BakarUpdateForm(forms.ModelForm):
+    class Meta:
+        model = KabelBakar
+        fields = ['tip_kabela','proizvodjac', 'naziv','broj_pari','metraza',]
+
+class BakarIzdajForm(forms.ModelForm):
+    class Meta:
+        model = KabelBakar
+        fields = ['izdana_metraza', 'izdano_na','radnja']
+
+    def clean(self):
+            super(BakarIzdajForm, self).clean()
+
+            izdana_metraza = self.cleaned_data.get('izdana_metraza')
+            izdano_na = self.cleaned_data.get('izdano_na')
+            radnja = self.cleaned_data.get("radnja")
+            
+            if not izdana_metraza:
+                self._errors['izdana_metraza'] = self.error_class(['Ovo polje je obavezno'])
+            if not izdano_na:
+                self._errors['izdano_na'] = self.error_class(['Ovo polje je obavezno'])
+            if not radnja:
+                self._errors['radnja'] = self.error_class(['Ovo polje je obavezno'])
+
+            return self.cleaned_data
+
+
+class BakarReorderLevelForm(forms.ModelForm):
+    class Meta:
+        model = KabelBakar
+        fields = ['reorder_level']
+
+class BakarHistorySearchForm(forms.ModelForm):
+    class Meta:
+        model = KabelBakarHistory
+        fields = ['inv_broj','naziv','tip_kabela','proizvodjac','vlasnik','radnja','export_to_CSV'] #srediti pretragu zaduženja
+
+
+#Kablovi - UTP
+
+class UtpCreateForm(forms.ModelForm):
+    
+    class Meta:
+        model = KabelUtp
+        fields = ['inv_broj','vlasnik','tip_kabela','proizvodjac', 'naziv','metraza']
+
+
+    def clean(self):
+        super(UtpCreateForm, self).clean()
+
+      # dohvacanje vrijednosti u poljima
+        inv_broj = self.cleaned_data.get('inv_broj')
+        naziv = self.cleaned_data.get('naziv')
+        vlasnik = self.cleaned_data.get("vlasnik")
+        tip_kabela = self.cleaned_data.get("tip_kabela")
+        metraza = self.cleaned_data.get('metraza')
+            
+      # ovjera jesu li polja popunjena
+        if not inv_broj :
+            self._errors['inv_broj'] = self.error_class(['Ovo polje je obavezno'])
+        
+        if inv_broj < 1 :
+            self._errors['inv_broj'] = self.error_class(['Inventurni broj mora biti pozitivan'])
+
+        for instance  in KabelUtp.objects.all():
+            if instance.inv_broj == inv_broj:
+                self._errors['inv_broj'] = self.error_class(['Inventurni broj več postoji!'])
+
+
+        if not naziv:
+            self._errors['naziv'] = self.error_class(['Ovo polje je obavezno'])
+        if not vlasnik:
+            self._errors['vlasnik'] = self.error_class(['Ovo polje je obavezno'])
+        if not tip_kabela:
+            self._errors['tip_kabela'] = self.error_class(['Ovo polje je obavezno'])
+        if not metraza:
+            self._errors['metraza'] = self.error_class(['Ovo polje je obavezno'])
+                
+        return self.cleaned_data
+
+        
+
+
+class DodajTipForm(forms.ModelForm):
+    class Meta:
+        model = TipKabela
+        fields = ['tip']
+
+class UtpSearchForm(forms.ModelForm):
+    class Meta:
+        model = KabelUtp
+        fields = ['naziv','inv_broj','tip_kabela','vlasnik','proizvodjac','export_to_CSV']
+
+class UtpUpdateForm(forms.ModelForm):
+    class Meta:
+        model = KabelUtp
+        fields = ['tip_kabela','proizvodjac', 'naziv','metraza',]
+
+class UtpIzdajForm(forms.ModelForm):
+    class Meta:
+        model = KabelUtp
+        fields = ['izdana_metraza', 'izdano_na','radnja']
+
+    def clean(self):
+            super(UtpIzdajForm, self).clean()
+
+            izdana_metraza = self.cleaned_data.get('izdana_metraza')
+            izdano_na = self.cleaned_data.get('izdano_na')
+            radnja = self.cleaned_data.get("radnja")
+            
+            if not izdana_metraza:
+                self._errors['izdana_metraza'] = self.error_class(['Ovo polje je obavezno'])
+            if not izdano_na:
+                self._errors['izdano_na'] = self.error_class(['Ovo polje je obavezno'])
+            if not radnja:
+                self._errors['radnja'] = self.error_class(['Ovo polje je obavezno'])
+
+            return self.cleaned_data
+
+
+class UtpReorderLevelForm(forms.ModelForm):
+    class Meta:
+        model = KabelUtp
+        fields = ['reorder_level']
+
+class UtpHistorySearchForm(forms.ModelForm):
+    class Meta:
+        model = KabelUtpHistory
+        fields = ['inv_broj','naziv','tip_kabela','proizvodjac','vlasnik','radnja','export_to_CSV'] #srediti pretragu zaduženja
+
 #########
 class SkladisteCreateForm(forms.ModelForm):
     
