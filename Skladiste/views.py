@@ -1,4 +1,4 @@
-from . forms import BakarCreateForm, BakarHistorySearchForm, BakarIzdajForm, BakarReorderLevelForm, BakarSearchForm, BakarUpdateForm, DodajKategorijuForm, DodajTipForm, IzdavanjeForm, OptikaCreateForm, OptikaHistorySearchForm, OptikaIzdajForm, OptikaReorderLevelForm, OptikaSearchForm, OptikaUpdateForm, ReorderLevelForm, SkladisteCreateForm, SkladisteSearchForm, SkladisteUpdateForm, UtpCreateForm, UtpHistorySearchForm, UtpIzdajForm, UtpReorderLevelForm, UtpSearchForm, UtpUpdateForm, ZaprimanjeForm, ZaduzivanjeForm
+from . forms import BakarCreateForm, BakarHistorySearchForm, BakarIzdajForm, BakarReorderLevelForm, BakarSearchForm, BakarUpdateForm, CijevCreateForm, CijevHistorySearchForm, CijevIzdajForm, CijevReorderLevelForm, CijevSearchForm, CijevUpdateForm, DodajKategorijuForm, DodajTipForm, IzdavanjeForm, MaterijalCreateForm, MaterijalIzdajForm, MaterijalReorderLevelForm, MaterijalSearchForm, MaterijalUpdateForm, OptikaCreateForm, OptikaHistorySearchForm, OptikaIzdajForm, OptikaReorderLevelForm, OptikaSearchForm, OptikaUpdateForm, ReorderLevelForm, SkladisteCreateForm, SkladisteSearchForm, SkladisteUpdateForm, UtpCreateForm, UtpHistorySearchForm, UtpIzdajForm, UtpReorderLevelForm, UtpSearchForm, UtpUpdateForm, ZaprimanjeForm, ZaduzivanjeForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -424,7 +424,6 @@ def listutp(request):
                                             inv_broj__icontains = form['inv_broj'].value(),
                                             #tip_kabela__tip__contains = form['tip_kabela'].value(),
                                             vlasnik__icontains = form['vlasnik'].value(),
-                                            broj_niti__icontains = form['broj_niti'].value(),
                                             proizvodjac__icontains = form['proizvodjac'].value()
         
         )
@@ -606,6 +605,386 @@ def utp_history(request):
             context = {'form':form, 'queryset':queryset}
 
     return render(request, 'utphistory.html', context)
+
+#################################
+#kablovi - BAKAR
+
+@login_required
+def listcijev(request):
+    form = CijevSearchForm(request.POST)
+    queryset = Cijev.objects.all()
+    context = {'queryset':queryset, 'form':form}
+    
+    
+    if request.method == 'POST':
+        #tip_kabela = (form['tip_kabela'].value)
+        queryset = Cijev.objects.filter(naziv__icontains = form['naziv'].value(),
+                                            inv_broj__icontains = form['inv_broj'].value(),
+                                            #tip_kabela__tip__contains = form['tip_kabela'].value(),
+                                            vlasnik__icontains = form['vlasnik'].value(),
+                                            promjer__icontains = form['promjer'].value(),
+                                            proizvodjac__icontains = form['proizvodjac'].value()
+        
+        )
+        #if (tip_kabela != ''):
+        #    queryset = queryset.filter(tip_kabela_id = tip_kabela)
+
+        if form['export_to_CSV'].value() == True:
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="skladiste_lista.csv"'
+
+            response.write(u'\ufeff'.encode('utf8')) #pravilan prikaz znakova
+            writer = csv.writer(response) 
+            writer.writerow(['NAZIV', 'INVENTURNI BROJ', 'Vrsta CIJEVI', 'VLASNIK','PPROMJER','PROIZVOĐAČ'])
+            instance = queryset
+            for stock in instance:
+                writer.writerow([stock.naziv, stock.inv_broj, stock.vrsta_cijevi, stock.vlasnik, stock.promjer, stock.proizvodjac])
+
+            return response
+        else:
+
+            context = {'form':form, 'queryset':queryset}
+    
+    return render(request,'skladistecijevi.html', context )
+
+
+@login_required
+def cijev_dodaj(request):
+    queryset = Cijev.objects.all()
+    form = CijevCreateForm()
+
+    if request.method =='POST':
+        form = CijevCreateForm(request.POST)
+        if form.is_valid():
+            kreirao = str(request.user)
+            form.save()
+            messages.success(request, 'Uspješno dodano!')
+            return redirect('skladiste_app:listcijev')
+
+    context = {'form': form, 'queryset':queryset}
+    return render(request, 'dodaj.html', context)
+
+
+@login_required
+def dodaj_tip(request):
+    form = DodajTipForm()
+    if request.method == 'POST':
+        form = DodajTipForm(request.POST)
+        if form.is_valid:
+            form.save()
+            messages.success(request, 'Tip kabela dodan!')
+            return redirect('skladiste_app:listbakar')
+
+    context = {'form':form}
+    return render(request, 'dodaj_kategoriju.html', context)
+
+
+@login_required
+def cijev_detalji(request, pk):
+    queryset = Cijev.objects.get(id=pk)
+    context = {'queryset':queryset}
+    
+    return render(request, 'cijev_detalji.html', context)
+
+@login_required
+def cijev_uredi(request, pk):
+	queryset = cijev.objects.get(id=pk)
+
+	form = CijevUpdateForm(instance = queryset)
+
+	if request.method == 'POST':
+		form = CijevUpdateForm(request.POST, instance=queryset)
+		if form.is_valid():
+			form.save()
+			return redirect('skladiste_app:listcijev')
+
+	context = {'form':form}
+
+	return render(request, 'uredi_artikl.html', context)
+
+
+@login_required
+def cijev_izdaj(request, pk):
+    queryset = cijev.objects.get(id=pk)
+    form = CijevIzdajForm(request.POST, instance=queryset)
+
+    if request.method =='POST':
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.metraza -= instance.izdana_metraza
+            instance.izdao = str(request.user)
+            if (instance.metraza >=0):
+                messages.success(request, 'Uspješno izdano. Još ' + str(instance.metraza) + ' ' + str(instance.naziv) + ' ostalo na skladištu.')
+                instance.save()
+            else:
+                messages.error(request,'Nedovoljno kabela')
+                context = {'queryset':queryset,'form':form}
+                return  render(request, 'izdavanje.html', context)
+            # kopiranje odabranog objekta u history
+            history = CijevHistory.objects.create(
+                #id = instance.id,
+                inv_broj = instance.inv_broj,
+                naziv = instance.naziv,
+                proizvodjac = instance.proizvodjac,
+                vlasnik = instance.vlasnik,
+                vrsta_cijevi = instance.vrsta_cjevi,
+                promjer = instance.promjer,
+                metraza = instance.metraza,
+                izdana_metraza = instance.izdana_metraza,
+                izdano_na = instance.izdano_na,
+                izdao = instance.izdao,
+                radnja = instance.radnja,
+                zadnje_osvjezeno = instance.zadnje_osvjezeno,
+            )
+            history.save()
+
+            return redirect('skladiste_app:listcijev')
+
+    context = {'queryset':queryset,
+                'form':form,
+                'username': 'Izdao: '+str(request.user)
+    }
+
+    return  render(request, 'izdavanje.html', context)
+
+
+@login_required
+def cijev_obrisi(request, pk):
+    queryset = KabelBakar.objects.get(id=pk)
+    if request.method == 'POST':
+        queryset.delete()
+        return redirect('skladiste_app:listcijev')
+    return render(request, 'obrisi_artikl.html')
+
+@login_required
+def cijev_reorder_level(request, pk):
+    queryset = cijev.objects.get(id=pk)
+    form = CijevReorderLevelForm(request.POST or None, instance = queryset)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.save()
+            messages.success(request, 'Nivo naručivanja za ' + str(instance.naziv) + ' postavljen je na ' + str(instance.reorder_level) + '.')
+
+            return redirect('skladiste_app:listcijev')
+
+    context = {'instance': queryset, 'form': form}
+    return render (request, 'reorder_level.html', context)
+
+@login_required
+def cijev_history(request):
+    form = CijevHistorySearchForm(request.POST)
+    queryset = CijevHistory.objects.all()
+    context = {'queryset':queryset, 'form':form}
+    
+    
+    if request.method == 'POST':
+        queryset = CijevHistory.objects.filter(naziv__icontains = form['naziv'].value(),
+                                            inv_broj__icontains = form['inv_broj'].value(),
+                                            proizvodjac__icontains = form['proizvodjac'].value(),
+                                            #tip_kabela__icontains = form['tip_kabela'].value(),
+                                            vlasnik__icontains = form['vlasnik'].value(),
+                                            promjer__icontains = form['promjer'].value(),
+                                            #izdano_na__icontains = form['izdano_na'].value(),
+                                            radnja__icontains = form['radnja'].value()
+        )
+        
+        if form['export_to_CSV'].value() == True:
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="skladiste_lista.csv"'
+
+            response.write(u'\ufeff'.encode('utf8')) #pravilan prikaz znakova
+            writer = csv.writer(response) 
+            writer.writerow(['NAZIV', 'INVENTURNI BROJ', 'TIP KABELA', 'VLASNIK','PROMJER','PROIZVOĐAČ'])
+            instance = queryset
+            for stock in instance:
+                writer.writerow([stock.naziv, stock.inv_broj, stock.tip_kabela, stock.vlasnik, stock.promjer, stock.proizvodjac])
+
+            return response
+        else:
+
+            context = {'form':form, 'queryset':queryset}
+
+    return render(request, 'bakarhistory.html', context)
+###########################
+
+#MATERIJAL
+
+@login_required
+def listmaterijal(request):
+    form = MaterijalSearchForm(request.POST)
+    queryset = Materijal.objects.all()
+    context = {'queryset':queryset, 'form':form}
+    
+    
+    if request.method == 'POST':
+        #tip_kabela = (form['tip_kabela'].value)
+        queryset = Materijal.objects.filter(naziv__icontains = form['naziv'].value(),
+                                            inv_broj__icontains = form['inv_broj'].value(),
+                                           # vlasnik__icontains = form['vlasnik'].value(),
+        )
+        #if (tip_kabela != ''):
+        #    queryset = queryset.filter(tip_kabela_id = tip_kabela)
+
+        if form['export_to_CSV'].value() == True:
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="skladiste_lista.csv"'
+
+            response.write(u'\ufeff'.encode('utf8')) #pravilan prikaz znakova
+            writer = csv.writer(response) 
+            writer.writerow(['NAZIV', 'INVENTURNI BROJ', 'VLASNIK',])
+            instance = queryset
+            for stock in instance:
+                writer.writerow([stock.naziv, stock.inv_broj, stock.vlasnik])
+
+            return response
+        else:
+
+            context = {'form':form, 'queryset':queryset}
+    
+    return render(request,'skladistematerijal.html', context )
+
+
+@login_required
+def materijal_dodaj(request):
+    queryset = Materijal.objects.all()
+    form = MaterijalCreateForm()
+
+    if request.method =='POST':
+        form = MaterijalCreateForm(request.POST)
+        if form.is_valid():
+            kreirao = str(request.user)
+            form.save()
+            messages.success(request, 'Uspješno dodano!')
+            return redirect('skladiste_app:listmaterijal')
+
+    context = {'form': form, 'queryset':queryset}
+    return render(request, 'dodaj.html', context)
+
+
+
+
+
+@login_required
+def materijal_detalji(request, pk):
+    queryset = Materijal.objects.get(id=pk)
+    context = {'queryset':queryset}
+    
+    return render(request, 'materijal_detalji.html', context)
+
+@login_required
+def materijal_uredi(request, pk):
+	queryset = Materijal.objects.get(id=pk)
+
+	form = MaterijalUpdateForm(instance = queryset)
+
+	if request.method == 'POST':
+		form = UtpUpdateForm(request.POST, instance=queryset)
+		if form.is_valid():
+			form.save()
+			return redirect('skladiste_app:listmaterijal')
+
+	context = {'form':form}
+
+	return render(request, 'materijal_uredi.html', context)
+
+
+@login_required
+def materijal_izdaj(request, pk):
+    queryset = Materijal.objects.get(id=pk)
+    form = MaterijalIzdajForm(request.POST, instance=queryset)
+
+    if request.method =='POST':
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.kolicina -= instance.izdana_kolicina
+            instance.izdao = str(request.user)
+            if (instance.kolicina >=0):
+                messages.success(request, 'Uspješno izdano. Još ' + str(instance.kolicina) + ' ' + str(instance.naziv) + ' ostalo na skladištu.')
+                instance.save()
+            else:
+                messages.error(request,'Nedovoljno kabela')
+                context = {'queryset':queryset,'form':form}
+                return  render(request, 'izdavanje.html', context)
+            # kopiranje odabranog objekta u history
+            history = MaterijalHistory.objects.create(
+                #id = instance.id,
+                inv_broj = instance.inv_broj,
+                naziv = instance.naziv,
+                vlasnik = instance.vlasnik,
+                kolicina = instance.kolicina,
+                izdana_kolicina = instance.izdana_kolicina,
+                izdano_na = instance.izdano_na,
+                izdao = instance.izdao,
+                radnja = instance.radnja,
+                zadnje_osvjezeno = instance.zadnje_osvjezeno,
+            )
+            history.save()
+
+            return redirect('skladiste_app:listmaterijal')
+
+    context = {'queryset':queryset,
+                'form':form,
+                'username': 'Izdao: '+str(request.user)
+    }
+
+    return  render(request, 'izdavanje.html', context)
+
+
+@login_required
+def materijal_obrisi(request, pk):
+    queryset = get_object_or_404(Materijal,id=pk)
+    if request.method == 'POST':
+        queryset.delete()
+        return redirect('skladiste_app:listmaterijal')
+    return render(request, 'obrisi_artikl.html')
+
+@login_required
+def materijal_reorder_level(request, pk):
+    queryset = Materijal.objects.get(id=pk)
+    form = MaterijalReorderLevelForm(request.POST or None, instance = queryset)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.save()
+            messages.success(request, 'Nivo naručivanja za ' + str(instance.naziv) + ' postavljen je na ' + str(instance.reorder_level) + '.')
+
+            return redirect('skladiste_app:listoptika')
+
+    context = {'instance': queryset, 'form': form}
+    return render (request, 'reorder_level.html', context)
+
+@login_required
+def materijal_history(request):
+    form = UtpHistorySearchForm(request.POST)
+    queryset = KabelUtpHistory.objects.all()
+    context = {'queryset':queryset, 'form':form}
+    
+    
+    if request.method == 'POST':
+        queryset = KabelUtpHistory.objects.filter(naziv__icontains = form['naziv'].value(),
+                                            inv_broj__icontains = form['inv_broj'].value(),
+                                            vlasnik__icontains = form['vlasnik'].value(),
+                                            radnja__icontains = form['radnja'].value()
+        )
+        
+        if form['export_to_CSV'].value() == True:
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="skladiste_lista.csv"'
+
+            response.write(u'\ufeff'.encode('utf8')) #pravilan prikaz znakova
+            writer = csv.writer(response) 
+            writer.writerow(['NAZIV', 'INVENTURNI BROJ','VLASNIK'])
+            instance = queryset
+            for stock in instance:
+                writer.writerow([stock.naziv, stock.inv_broj, stock.vlasnik,])
+
+            return response
+        else:
+
+            context = {'form':form, 'queryset':queryset}
+
+    return render(request, 'materijalhistory.html', context)
 
 #################################
 @login_required

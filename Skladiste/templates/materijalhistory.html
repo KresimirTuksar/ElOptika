@@ -1,0 +1,67 @@
+{% extends 'dash_base.html' %}
+
+{% load widget_tweaks %}
+
+{% block frame %}
+
+{% if messages %}
+        <ul style="list-style: none;" class="alert alert-info messages">
+               {% for message in messages %}
+                     <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+               {% endfor %}
+       </ul>
+  {% endif %}
+
+<table class="table table-responsive-sm table-striped table-secondary">
+    <thead>
+        <th>Inventurni broj</th>
+        <th>Naziv</th>
+        <th>Vlasnik</th>
+        <th>Količina</th>
+        <th>Zadužio</th>
+        <th>Radnja</th>
+        <th>Posljednje ažuriranje</th>
+        
+    </thead>
+
+    {% for item in queryset %}
+        <tbody>
+            <tr>
+                <td>{{item.inv_broj}}</td>
+                <td>{{item.naziv}}</td>
+                <td>{{item.vlasnik}}</td>
+                <td>{{item.kolicina}}</td>
+                <td>{{item.izdano_na}}</td>
+                <td>{{item.radnja}}</td>
+                <td>{{item.zadnje_osvjezeno}}</td>
+            </tr>
+        </tbody>
+    {% endfor %}
+</table>   
+{% endblock frame %}
+    
+{% block sidebar %}
+    <div>
+        <a href="{% url 'skladiste_app:listmaterijal' %}">Materijal</a><br>
+        
+        
+        <div class="pretraga">
+            <h3>Pretraga</h3>
+            <form action="" method="POST">
+                {% csrf_token %}
+                {% for field in form %}
+                    {{field.label_tag}}
+                    {% render_field field class="form-control" %}
+                {% endfor %}
+                    
+                <input class="btn btn-outline-success btn-block" type="submit" value="Traži">
+            </form>
+        </div>
+        
+        
+    </div>
+    
+    <br>
+    
+{% endblock sidebar %}
+    

@@ -61,12 +61,26 @@ class Zaduzenje(models.Model):
 # novo, prepravljeno
 
 class Alat(models.Model):
-    inv_broj = PositiveIntegerField(unique=True, verbose_name='Inventurni broj')
-    naziv = models.CharField(max_length=50, verbose_name='Naziv')
-    proizvodjac = models.CharField(verbose_name='Proizvođač', max_length=50)
-    sr_broj = models.CharField(verbose_name='Serijski broj', max_length=50)
+    inv_broj = PositiveIntegerField(default=0, verbose_name='Inventurni broj, blank=True, null=True')
+    naziv = models.CharField(max_length=50, verbose_name='Naziv', blank=True, null=True)
+    proizvodjac = models.CharField(verbose_name='Proizvođač', max_length=50, blank=True, null=True)
+    sr_broj = models.CharField(verbose_name='Serijski broj', max_length=50, blank=True, null=True)
     kreirao = models.CharField(max_length=50, blank=True, null=True)
-    zaduzio = models.ForeignKey(User, verbose_name="Zaduži na", on_delete=models.CASCADE)
+    zaduzio = models.ForeignKey(User, verbose_name="Zaduži na", blank=True, null=True, on_delete=models.CASCADE)
+    datum_zaduzivanja = models.DateField(verbose_name='Zaduženo dana', auto_now=True, auto_now_add=False)
+    zadnje_osvjezeno = models.DateField(verbose_name='Posljednje ažuriranje', auto_now=True, auto_now_add=False)
+    export_to_CSV = models.BooleanField(default=False) #export u csv format
+
+    def __str__(self):
+        return self.naziv
+
+class Zaduzenja(models.Model):
+    inv_broj = PositiveIntegerField(default=0, verbose_name='Inventurni broj, blank=True, null=True')
+    naziv = models.CharField(max_length=50, verbose_name='Naziv', blank=True, null=True)
+    proizvodjac = models.CharField(verbose_name='Proizvođač', max_length=50, blank=True, null=True)
+    sr_broj = models.CharField(verbose_name='Serijski broj', max_length=50, blank=True, null=True)
+    kreirao = models.CharField(max_length=50, blank=True, null=True)
+    zaduzio = models.ForeignKey(User, verbose_name="Zaduži na", blank=True, null=True, on_delete=models.CASCADE)
     datum_zaduzivanja = models.DateField(verbose_name='Zaduženo dana', auto_now=True, auto_now_add=False)
     zadnje_osvjezeno = models.DateField(verbose_name='Posljednje ažuriranje', auto_now=True, auto_now_add=False)
     export_to_CSV = models.BooleanField(default=False) #export u csv format
@@ -76,16 +90,31 @@ class Alat(models.Model):
 
 
 class Materijal(models.Model):
-    inv_broj = PositiveIntegerField(default=0, verbose_name='Inventurni broj')
-    naziv = models.CharField(max_length=50, verbose_name='Naziv')
-    kolicina = models.PositiveIntegerField(verbose_name='Količina')
-    zaprimljena_kolicina = models.PositiveIntegerField(verbose_name='Zaprimljena količina')
-    zaprimio = models.ForeignKey(User, verbose_name="Zaprimio", related_name='users', on_delete=models.CASCADE)
-    izdana_kolicina = models.PositiveIntegerField(verbose_name='Izdana količina')
+    inv_broj = IntegerField(default=0, verbose_name='Inventurni broj', blank=True, null=True)
+    naziv = models.CharField(max_length=50, verbose_name='Naziv', blank=True, null=True)
+    vlasnik = models.CharField(max_length=50, blank=True, null=True)
+    kolicina = models.IntegerField(verbose_name='Količina', blank=True, null=True)
+    izdana_kolicina = models.IntegerField(verbose_name='Izdana količina', blank=True, null=True)
     izdao = models.CharField(max_length=50, blank=True, null=True)
-    izdano_na = models.ForeignKey(User, verbose_name="Izdaj na", on_delete=models.CASCADE)
-    radnja = models.CharField(max_length=50, verbose_name='Radnja')
+    izdano_na = models.ForeignKey(User, verbose_name="Izdaj na", blank=True, null=True, on_delete=models.CASCADE)
+    radnja = models.CharField(max_length=50, verbose_name='Radnja', blank=True, null=True)
+    zadnje_osvjezeno = models.DateField(verbose_name='Posljednje ažuriranje', auto_now=True, auto_now_add=False)
     reorder_level = models.IntegerField(default=0, blank=True, null=True) #kada naručiti
+    export_to_CSV = models.BooleanField(default=False) #export u csv format
+
+    def __str__(self):
+        return self.naziv
+
+class MaterijalHistory(models.Model):
+    inv_broj = IntegerField(default=0, verbose_name='Inventurni broj', blank=True, null=True)
+    naziv = models.CharField(max_length=50, verbose_name='Naziv', blank=True, null=True)
+    vlasnik = models.CharField(max_length=50, blank=True, null=True)
+    kolicina = models.IntegerField(verbose_name='Količina', blank=True, null=True)
+    izdana_kolicina = models.IntegerField(verbose_name='Izdana količina', blank=True, null=True)
+    izdao = models.CharField(max_length=50, blank=True, null=True)
+    izdano_na = models.ForeignKey(User, verbose_name="Izdaj na", blank=True, null=True, on_delete=models.CASCADE)
+    radnja = models.CharField(max_length=50, verbose_name='Radnja', blank=True, null=True)
+    zadnje_osvjezeno = models.DateField(verbose_name='Posljednje ažuriranje', auto_now=True, auto_now_add=False)
     export_to_CSV = models.BooleanField(default=False) #export u csv format
 
     def __str__(self):
@@ -212,6 +241,47 @@ class KabelUtpHistory(models.Model):
     radnja = models.CharField(verbose_name='Radnja', max_length=50, blank=True, null=True)
     reorder_level = models.IntegerField(default=0, blank=True, null=True) #kada naručiti
     zadnje_osvjezeno = models.DateField(verbose_name='Posljednje ažuriranje', auto_now=True, auto_now_add=False)
+    export_to_CSV = models.BooleanField(default=False) #export u csv format
+
+    def __str__(self):
+        return self.naziv
+
+#CIJEVI
+class Cijev(models.Model):
+    inv_broj = IntegerField(default=0, blank=True, null=True, verbose_name='Inventurni broj')
+    naziv = models.CharField(max_length=50, verbose_name="Naziv", blank=True, null=True)
+    proizvodjac = models.CharField(blank=True, null=True, verbose_name='Proizvođač', max_length=50)
+    vlasnik = models.CharField(max_length=50, verbose_name="Vlasnik", blank=True, null=True,)
+    vrsta_cijevi = models.ForeignKey(TipKabela, verbose_name="Vrsta cijevi", blank=True, null=True, on_delete=models.CASCADE)
+    promjer = IntegerField(blank=True, null=True, verbose_name='Promjer')
+    metraza = models.IntegerField(default=0, blank=True, null=True,verbose_name='Ukupna metraža')
+    izdana_metraza = models.IntegerField(blank=True, null=True, verbose_name='Izdano metara')
+    izdano_na = models.ForeignKey(User, blank=True, null=True, verbose_name="Izdaj na", on_delete=models.CASCADE)
+    izdao = models.CharField(max_length=50, blank=True, null=True)
+    kreirao = models.CharField(max_length=50, blank=True, null=True)
+    radnja = models.CharField(verbose_name='Radnja', max_length=50, blank=True, null=True)
+    reorder_level = models.IntegerField(default=0, blank=True, null=True) #kada naručiti
+    zadnje_osvjezeno = models.DateTimeField(verbose_name='Posljednje ažuriranje', auto_now=True, auto_now_add=False)
+    export_to_CSV = models.BooleanField(default=False) #export u csv format
+
+    def __str__(self):
+        return self.naziv
+
+class CijevHistory(models.Model):
+    inv_broj = IntegerField(blank=True, null=True, verbose_name='Inventurni broj')
+    naziv = models.CharField(max_length=50, verbose_name="Naziv", blank=True, null=True)
+    proizvodjac = models.CharField(blank=True, null=True, verbose_name='Proizvođač', max_length=50)
+    vlasnik = models.CharField(max_length=50, verbose_name="Vlasnik", blank=True, null=True,)
+    vrsta_cijevi = models.ForeignKey(TipKabela, verbose_name="Vrsta cijevi", blank=True, null=True, on_delete=models.CASCADE)
+    promjer = IntegerField(default=1, verbose_name='Promjer')
+    metraza = models.IntegerField(default=0,verbose_name='Ukupna metraža')
+    izdana_metraza = models.IntegerField(blank=True, null=True, verbose_name='Izdano metara')
+    izdano_na = models.ForeignKey(User, blank=True, null=True, verbose_name="Izdaj na", on_delete=models.CASCADE)
+    izdao = models.CharField(max_length=50, blank=True, null=True)
+    kreirao = models.CharField(max_length=50, blank=True, null=True)
+    radnja = models.CharField(verbose_name='Radnja', max_length=50, blank=True, null=True)
+    reorder_level = models.IntegerField(default=0, blank=True, null=True) #kada naručiti
+    zadnje_osvjezeno = models.DateTimeField(verbose_name='Posljednje ažuriranje', auto_now=False, auto_now_add=False, null=True)
     export_to_CSV = models.BooleanField(default=False) #export u csv format
 
     def __str__(self):

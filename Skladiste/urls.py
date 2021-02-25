@@ -39,6 +39,26 @@ urlpatterns = [
     path("skladiste/utp/reorder_level/<str:pk>/", views.utp_reorder_level, name='utp_reorder_level'),
     path("skladiste/utp/history/", views.bakar_history, name='utp_history'),
 
+    #CIJEVI
+    path("skladiste/cijevi/", views.listcijev, name='listcijev'),
+    path("skladiste/cijevi/novi_unos", views.cijev_dodaj, name='cijev_dodaj'),
+    path("skladiste/cijevi/dodaj_tip", views.dodaj_tip, name='dodaj_tip'),
+    path("skladiste/cijevi/uredi/<str:pk>", views.cijev_uredi, name='cijev_uredi'),
+    path("skladiste/cijevi/detalji/<str:pk>/", views.cijev_detalji, name='cijev_detalji'),
+    path("skladiste/cijevi/izdaj/<str:pk>/", views.cijev_izdaj, name='cijev_izdaj'),
+    path("skladiste/cijevi/obrisi/<str:pk>/", views.cijev_obrisi, name='cijev_obrisi'),
+    path("skladiste/cijevi/reorder_level/<str:pk>/", views.cijev_reorder_level, name='cijev_reorder_level'),
+    path("skladiste/cijevi/history/", views.cijev_history, name='cijev_history'),
+
+#MATERIJAL
+    path("skladiste/materijal/", views.listmaterijal, name='listmaterijal'),
+    path("skladiste/materijal/novi_unos", views.materijal_dodaj, name='materijal_dodaj'),
+    path("skladiste/materijal/uredi/<str:pk>", views.materijal_uredi, name='materijal_uredi'),
+    path("skladiste/materijal/detalji/<str:pk>/", views.materijal_detalji, name='materijal_detalji'),
+    path("skladiste/materijal/izdaj/<str:pk>/", views.materijal_izdaj, name='materijal_izdaj'),
+    path("skladiste/materijal/obrisi/<str:pk>/", views.materijal_obrisi, name='materijal_obrisi'),
+    path("skladiste/materijal/reorder_level/<str:pk>/", views.materijal_reorder_level, name='materijal_reorder_level'),
+    path("skladiste/materijal/history/", views.materijal_history, name='materijal_history'),
 #############
     path("skladiste/", views.skladiste, name='skladiste'),
     path("skladiste/novi_unos/", views.dodaj, name = 'novi_unos'),
