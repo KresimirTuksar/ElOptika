@@ -1,0 +1,32 @@
+{% extends 'dash_base.html' %}
+
+
+{% block frame %}
+    <table class="table table-sm table-responsive-sm">
+        <thead>
+            <th>Naziv</th>
+            <th>Datum</th>
+            <th>Početna</th>
+            <th>Završna</th>
+            <th>Dnevna kilometraža</th>
+            <th>Relacija</th>
+            <th>Zadužio</th>
+        </thead>
+        {% for item in queryset1 %}
+        <tbody>
+            <tr>
+                
+                    <td>{{item.ime}}</td>
+                    <td>{{item.datum}}</td>
+                    <td>{{item.pocetna}}</td>
+                    <td>{{item.zavrsna}}</td>
+                    <td>{{item.dnevna_kilometraza}}</td>
+                    <td>{{item.relacija}}</td>
+                    <td>{{item.zaduzio}}</td>
+                
+            </tr> 
+        </tbody>
+        {% endfor %}
+    </table> 
+{% endblock frame %}
+    

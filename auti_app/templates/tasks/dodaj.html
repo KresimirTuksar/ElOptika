@@ -1,25 +1,47 @@
-{% extends 'base.html' %}
+{% extends 'dash_base.html' %}
+
 {% load widget_tweaks %}
 
-{% block content %}
-<div class="alert alert-primary">
-  <h2>Dodaj automobil</h2>
-</div>
-
-  <div class="container">
-        <form method="POST">
+{% block frame %}
+    <div class="container">
+        {% if messages %}
+            <ul class="messages">
+               {% for message in messages %}
+                     <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+               {% endfor %}
+            </ul>
+        {% endif %}
+        <form method="post" novalidate>
             {% csrf_token %}
-            
-            {% for field in form %}
-              {{ field.label_tag }}
-              {% render_field field class="form-control"%}
-            {% endfor %}
-            <br>
-            <input type="submit" class="btn btn-success" value="Dodaj">
-            <a class="btn btn-outline-danger" href="{% url 'auti_app:lista' %}">Otkaži</a>
-          </form>
-    
-    </div>
 
-{% endblock content %}
+            {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+
+                {% if form.is_bound %}
+                {% if field.errors %}
+                    {% render_field field class="form-control is-invalid" %}
+                    {% for error in field.errors %}
+                    <div class="invalid-feedback">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    {% render_field field class="form-control is-valid" %}
+                {% endif %}
+                {% else %}
+                {% render_field field class="form-control" %}
+                {% endif %}
+
+            </div>
+            {% endfor %}
+
+            <input type="submit" class="btn btn-outline-success" value="Pošalji">
+        </form>
+    </div>
+{% endblock frame %}
     
+
+{% block sidebar %}
+    <a href="{% url 'skladiste_app:skladiste'%}"></a>
+{% endblock sidebar %}

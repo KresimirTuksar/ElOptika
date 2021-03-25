@@ -59,13 +59,14 @@ class Zaduzenje(models.Model):
     
 
 # novo, prepravljeno
-
 class Alat(models.Model):
-    inv_broj = PositiveIntegerField(default=0, verbose_name='Inventurni broj, blank=True, null=True')
+    inv_broj = IntegerField(default=0, verbose_name='Inventurni broj', blank=True, null=True)
     naziv = models.CharField(max_length=50, verbose_name='Naziv', blank=True, null=True)
     proizvodjac = models.CharField(verbose_name='Proizvođač', max_length=50, blank=True, null=True)
     sr_broj = models.CharField(verbose_name='Serijski broj', max_length=50, blank=True, null=True)
     kreirao = models.CharField(max_length=50, blank=True, null=True)
+    kreirano = models.DateTimeField(auto_now=False, auto_now_add=True, blank=True, null=True)
+    izdao = models.CharField(max_length=50, blank=True, null=True)
     zaduzio = models.ForeignKey(User, verbose_name="Zaduži na", blank=True, null=True, on_delete=models.CASCADE)
     datum_zaduzivanja = models.DateField(verbose_name='Zaduženo dana', auto_now=True, auto_now_add=False)
     zadnje_osvjezeno = models.DateField(verbose_name='Posljednje ažuriranje', auto_now=True, auto_now_add=False)
@@ -80,8 +81,9 @@ class Zaduzenja(models.Model):
     proizvodjac = models.CharField(verbose_name='Proizvođač', max_length=50, blank=True, null=True)
     sr_broj = models.CharField(verbose_name='Serijski broj', max_length=50, blank=True, null=True)
     kreirao = models.CharField(max_length=50, blank=True, null=True)
+    kreirano = models.DateTimeField(auto_now=False, auto_now_add=False)
     zaduzio = models.ForeignKey(User, verbose_name="Zaduži na", blank=True, null=True, on_delete=models.CASCADE)
-    datum_zaduzivanja = models.DateField(verbose_name='Zaduženo dana', auto_now=True, auto_now_add=False)
+    datum_zaduzivanja = models.DateField(verbose_name='Zaduženo dana', auto_now=False, auto_now_add=False)
     zadnje_osvjezeno = models.DateField(verbose_name='Posljednje ažuriranje', auto_now=True, auto_now_add=False)
     export_to_CSV = models.BooleanField(default=False) #export u csv format
 
@@ -97,6 +99,8 @@ class Materijal(models.Model):
     izdana_kolicina = models.IntegerField(verbose_name='Izdana količina', blank=True, null=True)
     izdao = models.CharField(max_length=50, blank=True, null=True)
     izdano_na = models.ForeignKey(User, verbose_name="Izdaj na", blank=True, null=True, on_delete=models.CASCADE)
+    kreirao = models.CharField(max_length=50, blank=True, null=True)
+    kreirano = models.DateTimeField(auto_now=False, auto_now_add=True)
     radnja = models.CharField(max_length=50, verbose_name='Radnja', blank=True, null=True)
     zadnje_osvjezeno = models.DateField(verbose_name='Posljednje ažuriranje', auto_now=True, auto_now_add=False)
     reorder_level = models.IntegerField(default=0, blank=True, null=True) #kada naručiti
@@ -113,6 +117,8 @@ class MaterijalHistory(models.Model):
     izdana_kolicina = models.IntegerField(verbose_name='Izdana količina', blank=True, null=True)
     izdao = models.CharField(max_length=50, blank=True, null=True)
     izdano_na = models.ForeignKey(User, verbose_name="Izdaj na", blank=True, null=True, on_delete=models.CASCADE)
+    kreirao = models.CharField(max_length=50, blank=True, null=True)
+    kreirano = models.DateTimeField(auto_now=False, auto_now_add=True)
     radnja = models.CharField(max_length=50, verbose_name='Radnja', blank=True, null=True)
     zadnje_osvjezeno = models.DateField(verbose_name='Posljednje ažuriranje', auto_now=True, auto_now_add=False)
     export_to_CSV = models.BooleanField(default=False) #export u csv format
@@ -140,6 +146,7 @@ class KabelOptika(models.Model):
     izdano_na = models.ForeignKey(User, blank=True, null=True, verbose_name="Izdaj na", on_delete=models.CASCADE)
     izdao = models.CharField(max_length=50, blank=True, null=True)
     kreirao = models.CharField(max_length=50, blank=True, null=True)
+    kreirano = models.DateTimeField(auto_now=False, auto_now_add=True)
     radnja = models.CharField(verbose_name='Radnja', max_length=50, blank=True, null=True)
     reorder_level = models.IntegerField(default=0, blank=True, null=True) #kada naručiti
     zadnje_osvjezeno = models.DateTimeField(verbose_name='Posljednje ažuriranje', auto_now=True, auto_now_add=False)
@@ -160,6 +167,7 @@ class KabelOptikaHistory(models.Model):
     izdano_na = models.ForeignKey(User, blank=True, null=True, verbose_name="Izdaj na", on_delete=models.CASCADE)
     izdao = models.CharField(max_length=50, blank=True, null=True)
     kreirao = models.CharField(max_length=50, blank=True, null=True)
+    kreirano = models.DateTimeField(auto_now=False, auto_now_add=True)
     radnja = models.CharField(verbose_name='Radnja', max_length=50, blank=True, null=True)
     reorder_level = models.IntegerField(default=0, blank=True, null=True) #kada naručiti
     zadnje_osvjezeno = models.DateTimeField(verbose_name='Posljednje ažuriranje', auto_now=False, auto_now_add=False, null=True)
@@ -180,6 +188,8 @@ class KabelBakar(models.Model):
     metraza = models.IntegerField(default=0, blank=True, null=True,verbose_name='Ukupna metraža')
     izdana_metraza = models.IntegerField(blank=True, null=True, verbose_name='Izdano metara')
     izdano_na = models.ForeignKey(User, blank=True, null=True, verbose_name="Izdaj na", on_delete=models.CASCADE)
+    kreirao = models.CharField(max_length=50, blank=True, null=True)
+    kreirano = models.DateTimeField(auto_now=False, auto_now_add=True)
     radnja = models.CharField(verbose_name='Radnja', max_length=50, blank=True, null=True)
     reorder_level = models.IntegerField(default=0, blank=True, null=True) #kada naručiti
     zadnje_osvjezeno = models.DateField(verbose_name='Posljednje ažuriranje', auto_now=True, auto_now_add=False)
@@ -200,6 +210,7 @@ class KabelBakarHistory(models.Model):
     izdano_na = models.ForeignKey(User, blank=True, null=True, verbose_name="Izdaj na", on_delete=models.CASCADE)
     izdao = models.CharField(max_length=50, blank=True, null=True)
     kreirao = models.CharField(max_length=50, blank=True, null=True)
+    kreirano = models.DateTimeField(auto_now=False, auto_now_add=True)
     radnja = models.CharField(verbose_name='Radnja', max_length=50, blank=True, null=True)
     reorder_level = models.IntegerField(default=0, blank=True, null=True) #kada naručiti
     zadnje_osvjezeno = models.DateTimeField(verbose_name='Posljednje ažuriranje', auto_now=False, auto_now_add=False, null=True)
@@ -220,6 +231,8 @@ class KabelUtp(models.Model):
     izdana_metraza = models.IntegerField(blank=True, null=True, verbose_name='Izdano metara')
     izdano_na = models.ForeignKey(User, blank=True, null=True, verbose_name="Izdaj na", on_delete=models.CASCADE)
     izdao = models.CharField(max_length=50, blank=True, null=True)
+    kreirao = models.CharField(max_length=50, blank=True, null=True)
+    kreirano = models.DateTimeField(auto_now=False, auto_now_add=True)
     radnja = models.CharField(verbose_name='Radnja', max_length=50, blank=True, null=True)
     reorder_level = models.IntegerField(default=0, blank=True, null=True) #kada naručiti
     zadnje_osvjezeno = models.DateField(verbose_name='Posljednje ažuriranje', auto_now=True, auto_now_add=False)
@@ -238,6 +251,8 @@ class KabelUtpHistory(models.Model):
     izdana_metraza = models.IntegerField(blank=True, null=True, verbose_name='Izdano metara')
     izdano_na = models.ForeignKey(User, blank=True, null=True, verbose_name="Izdaj na", on_delete=models.CASCADE)
     izdao = models.CharField(max_length=50, blank=True, null=True)
+    kreirao = models.CharField(max_length=50, blank=True, null=True)
+    kreirano = models.DateTimeField(auto_now=False, auto_now_add=True)
     radnja = models.CharField(verbose_name='Radnja', max_length=50, blank=True, null=True)
     reorder_level = models.IntegerField(default=0, blank=True, null=True) #kada naručiti
     zadnje_osvjezeno = models.DateField(verbose_name='Posljednje ažuriranje', auto_now=True, auto_now_add=False)
@@ -259,6 +274,7 @@ class Cijev(models.Model):
     izdano_na = models.ForeignKey(User, blank=True, null=True, verbose_name="Izdaj na", on_delete=models.CASCADE)
     izdao = models.CharField(max_length=50, blank=True, null=True)
     kreirao = models.CharField(max_length=50, blank=True, null=True)
+    kreirano = models.DateTimeField(auto_now=False, auto_now_add=True)
     radnja = models.CharField(verbose_name='Radnja', max_length=50, blank=True, null=True)
     reorder_level = models.IntegerField(default=0, blank=True, null=True) #kada naručiti
     zadnje_osvjezeno = models.DateTimeField(verbose_name='Posljednje ažuriranje', auto_now=True, auto_now_add=False)
@@ -279,6 +295,7 @@ class CijevHistory(models.Model):
     izdano_na = models.ForeignKey(User, blank=True, null=True, verbose_name="Izdaj na", on_delete=models.CASCADE)
     izdao = models.CharField(max_length=50, blank=True, null=True)
     kreirao = models.CharField(max_length=50, blank=True, null=True)
+    kreirano = models.DateTimeField(auto_now=False, auto_now_add=True)
     radnja = models.CharField(verbose_name='Radnja', max_length=50, blank=True, null=True)
     reorder_level = models.IntegerField(default=0, blank=True, null=True) #kada naručiti
     zadnje_osvjezeno = models.DateTimeField(verbose_name='Posljednje ažuriranje', auto_now=False, auto_now_add=False, null=True)

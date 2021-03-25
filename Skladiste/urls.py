@@ -59,19 +59,25 @@ urlpatterns = [
     path("skladiste/materijal/obrisi/<str:pk>/", views.materijal_obrisi, name='materijal_obrisi'),
     path("skladiste/materijal/reorder_level/<str:pk>/", views.materijal_reorder_level, name='materijal_reorder_level'),
     path("skladiste/materijal/history/", views.materijal_history, name='materijal_history'),
+
+#ALAT
+    path("skladiste/alat/", views.listalat, name='listalat'),
+    path("skladiste/alat/novi_unos", views.alat_dodaj, name='alat_dodaj'),
+    path("skladiste/alat/uredi/<str:pk>", views.alat_uredi, name='alat_uredi'),
+    path("skladiste/alat/detalji/<str:pk>/", views.alat_detalji, name='alat_detalji'),
+    path("skladiste/alat/zaduzi/<str:pk>/", views.alat_zaduzi, name='alat_zaduzi'),
+    path("skladiste/alat/obrisi/<str:pk>/", views.alat_obrisi, name='alat_obrisi'),
 #############
     path("skladiste/", views.skladiste, name='skladiste'),
-    path("skladiste/novi_unos/", views.dodaj, name = 'novi_unos'),
-    path("skladiste/dodaj_kategoriju/", views.dodaj_kategoriju, name = 'dodaj_kategoriju'),
-    path("skladiste/uredi_artikl/<str:pk>/", views.uredi, name='uredi_artikl'),
-    path("skladiste/obrisi_artikl/<str:pk>/", views.obrisi_artikl, name='obrisi_artikl'),
-    path("skladiste/artikl_detalji/<str:pk>/", views.detalji, name='artikl_detalji'),
-    path("skladiste/reorder_level/<str:pk>/", views.reorder_level, name='reorder_level'),
-    path("skladiste/izdavanje/<str:pk>/", views.izdavanje, name='izdavanje'),
-    path("skladiste/zaprimanje/<str:pk>/", views.zaprimanje, name='zaprimanje'),
-    path("skladiste/zaduzivanje/<str:pk>/", views.zaduzivanje, name='zaduzivanje'),
+    #path("skladiste/novi_unos/", views.dodaj, name = 'novi_unos'),
+    #path("skladiste/dodaj_kategoriju/", views.dodaj_kategoriju, name = 'dodaj_kategoriju'),
+    #path("skladiste/artikl_detalji/<str:pk>/", views.detalji, name='artikl_detalji'),
+    #path("skladiste/reorder_level/<str:pk>/", views.reorder_level, name='reorder_level'),
+    #path("skladiste/izdavanje/<str:pk>/", views.izdavanje, name='izdavanje'),
+    #path("skladiste/zaprimanje/<str:pk>/", views.zaprimanje, name='zaprimanje'),
+    #path("skladiste/zaduzivanje/<str:pk>/", views.zaduzivanje, name='zaduzivanje'),
     
     
-    path("skladiste/history", views.skladiste_history, name='skladiste_history'),
+    #path("skladiste/history", views.skladiste_history, name='skladiste_history'),
 
 ]

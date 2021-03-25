@@ -12,7 +12,7 @@
        </ul>
 {% endif %}
 
-<h2>Detalji</h2>
+<h2>Detalji: {{queryset.naziv}}; {{queryset.proizvodjac}} </h2>
 <hr>
 <div class="row">
     <div class="col-sm">
@@ -35,24 +35,16 @@
 <hr>
 <div class="row">
     <div class="col-sm">
-        <b>Tip kabela</b>
-        <p>{{queryset.tip_kabela}}</p>
-    </div>
-    <div class="col-sm">
-      <b>Proizvođač</b>
+      <b>proizvođač</b>
       <p>{{queryset.proizvodjac}}</p>
     </div>
     <div class="col-sm">
-        <b>Preostalo metara</b>
-        {% if queryset.metraza <= queryset.reorder_level %}
-        <p style="background-color: red; color: white;">{{queryset.metraza}}</p>
-        {% else %}
-        <p>{{queryset.metraza}}</p>
-        {% endif %}
+        <b>Serijski broj</b>
+        <p>{{queryset.sr_broj}}</p>
     </div>
     <div class="col-sm">
-        <b>Promjer (mm)</b>
-        <p>{{queryset.promjer}}</p>
+    </div>
+    <div class="col-sm">
     </div>
 </div>
 <hr>
@@ -63,37 +55,36 @@
     </div>
     <div class="col-sm">
       <b>Zadužio</b>
-      <p>{{queryset.izdano_na}}</p>
+      <p>{{queryset.zaduzio}}</p>
     </div>
     <div class="col-sm">
-        <b>Radnja</b>
-        <p>{{queryset.radnja}}</p>
+        <b>Datum zaduženja</b>
+        <p>{{queryset.datum_zaduzivanja}}</p>
     </div>
     <div class="col-sm">
-        <b>Izdano metara</b>
-        <p>{{queryset.izdana_metraza}} </p>
     </div>
 </div>
 <hr>
 <div class="row">
     <div class="col-sm-3"><b>Reorder level</b><p>{{queryset.reorder_level}}</p></div>
-    <div class="col-sm-9"><a class = "btn btn-sm btn-warning" href="{% url 'skladiste_app:cijev_reorder_level' queryset.id %}">Uredi</a></div>
+    <div class="col-sm-9"><a class = "btn btn-sm btn-warning" href="{% url 'skladiste_app:optika_reorder_level' queryset.id %}">Uredi</a></div>
 </div>
 
 {% endblock frame %}
     
-
+{% block buttons %}
+    
+    
+{% endblock buttons %}
 
 
 {% block sidebar %}
-    <a href="{% url 'skladiste_app:listcijev' %}" class="btn btn-link btn-block">Natrag</a>
+    <a href="{% url 'skladiste_app:listalat' %}" class="btn btn-link btn-block">Natrag</a>
     <div class="mt-0">
-        <a href="{% url 'skladiste_app:cijev_uredi' queryset.id %}" class="btn btn-info btn-sm btn-block">Uredi</a>
-        <a href="{% url 'skladiste_app:cijev_izdaj' queryset.id %}" class='btn btn-outline-primary btn-block'>Izdaj</a>
-        <a href="{% url 'skladiste_app:cijev_obrisi' queryset.id %}" class='btn btn-danger btn-block'>Obriši</a>
-        
-        
-    </div>
+      <a href="{% url 'skladiste_app:optika_uredi' queryset.id %}" class="btn btn-info btn-sm btn-block">Uredi</a>
+      <a href="{% url 'skladiste_app:alat_zaduzi' queryset.id %}" class='btn btn-outline-primary btn-block'>Izdaj</a>
+      <a href="{% url 'skladiste_app:optika_obrisi' queryset.id %}" class='btn btn-danger btn-block'>Obriši</a>
+  </div>
 {% endblock sidebar %}
     
     

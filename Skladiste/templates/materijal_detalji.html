@@ -10,56 +10,78 @@
                      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
                {% endfor %}
        </ul>
-  {% endif %}
+{% endif %}
 
-  <table class="table table-responsive-sm table-striped table-secondary">
-    <thead>
-        <th>Inventurni broj</th>
-        <th>Naziv</th>
-        <th>Vlasnik</th>
-        <th>Količina</th>
-        <th>Reorder level</th>
-        <th>Izdao</th>
-        <th>Zadužio</th>
-        <th>Kreirao</th>
-        <th>Radnja</th>
-    </thead>
+<h2>Detalji</h2>
+<hr>
+<div class="row">
+    <div class="col-sm">
+        <b>Inventurni broj</b>
+        <p>{{queryset.inv_broj}}</p>
+    </div>
+    <div class="col-sm">
+      <b>Naziv</b>
+      <p>{{queryset.naziv}}</p>
+    </div>
+    <div class="col-sm">
+      <b>Kreirao</b>
+      <p>{{queryset.kreirao}}</p>
+    </div>
+    <div class="col-sm">
+        <b>Kreirano</b>
+        <p>{{queryset.kreirano}}</p>
+      </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-sm">
+        <b>Količina</b>
+        <p>{{queryset.kolicina}}</p>
+    </div>
+    <div class="col-sm">
+    </div>
+    <div class="col-sm">
+        
+    </div>
+    <div class="col-sm">
+        
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-sm">
+      <b>Izdao</b>
+      <p>{{queryset.izdao}}</p>
+    </div>
+    <div class="col-sm">
+      <b>Zadužio</b>
+      <p>{{queryset.izdano_na}}</p>
+    </div>
+    <div class="col-sm">
+        <b>Izdana količina</b>
+        <p>{{queryset.izdana_kolicina}}</p>
+    </div>
+    <div class="col-sm">
+        
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-sm-3"><b>Reorder level</b><p>{{queryset.reorder_level}}</p></div>
+    <div class="col-sm-9"><a class = "btn btn-sm btn-warning" href="{% url 'skladiste_app:cijev_reorder_level' queryset.id %}">Uredi</a></div>
+</div>
 
-    
-    <tbody>
-        <tr>
-            <td>{{queryset.inv_broj}}</td>
-            <td>{{queryset.naziv}}</a></td>
-            <td>{{queryset.vlasnik}}</td>
-            <td>
-                {% if queryset.koilcina <= queryset.reorder_level %}
-                    <div style="background-color: red;">
-                        {{queryset.kolicina}}
-                    </div>
-                {% else %}
-                    {{queryset.kolicina}}
-                {% endif %}
-            </td>
-            <td><a href="{% url 'skladiste_app:optika_reorder_level' queryset.id %}">{{queryset.reorder_level}}</a></td>
-            <td>{{queryset.izdao}}</td>
-            <td>{{queryset.izdano_na}}</td>
-            <td>{{queryset.kreirao}}</td>
-            <td>{{queryset.radnja}}</td>
-        </tr>
-    </tbody>
-    
-</table>      
 {% endblock frame %}
-    
+
 {% block sidebar %}
-    <div>
-        <a href="{% url 'skladiste_app:optika_dodaj' %}" class="btn btn-success btn-block">Novi unos</a>
-        <a href="{% url 'skladiste_app:materijal_uredi' queryset.id %}" class="btn btn-info btn-block">Uredi</a>
-        <a href="{% url 'skladiste_app:materijal_izdaj' queryset.id %}" class='btn btn-outline-primary btn-block'>IZDAJ ARTIKL</a>
-        <a href="{% url 'skladiste_app:materijal_obrisi' queryset.id %}" class='btn btn-danger btn-block'>Obriši</a>
+    <a href="{% url 'skladiste_app:listcijev' %}" class="btn btn-link btn-block">Natrag</a>
+    <div class="mt-0">
+        <a href="{% url 'skladiste_app:cijev_uredi' queryset.id %}" class="btn btn-info btn-sm btn-block">Uredi</a>
+        <a href="{% url 'skladiste_app:cijev_izdaj' queryset.id %}" class='btn btn-outline-primary btn-block'>Izdaj</a>
+        <a href="{% url 'skladiste_app:cijev_obrisi' queryset.id %}" class='btn btn-danger btn-block'>Obriši</a>
         
         
     </div>
-    
 {% endblock sidebar %}
+    
     

@@ -467,6 +467,81 @@ class MaterijalHistorySearchForm(forms.ModelForm):
         fields = ['inv_broj','naziv','vlasnik','radnja','export_to_CSV'] #srediti pretragu zaduženja
 
 
+#ALAT
+
+class ALatCreateForm(forms.ModelForm):
+    
+    class Meta:
+        model = Alat
+        fields = ['inv_broj','naziv','proizvodjac','sr_broj']
+
+
+    def clean(self):
+        super(ALatCreateForm, self).clean()
+
+      # dohvacanje vrijednosti u poljima
+        inv_broj = self.cleaned_data.get('inv_broj')
+        naziv = self.cleaned_data.get('naziv')
+        proizvodjac = self.cleaned_data.get("proizvodjac")
+        sr_broj = self.cleaned_data.get("sr_broj")
+        
+            
+      # ovjera jesu li polja popunjena
+        if not inv_broj :
+            self._errors['inv_broj'] = self.error_class(['Ovo polje je obavezno'])
+        
+        if inv_broj < 1 :
+            self._errors['inv_broj'] = self.error_class(['Inventurni broj mora biti pozitivan'])
+
+        for instance  in Alat.objects.all():
+            if instance.inv_broj == inv_broj:
+                self._errors['inv_broj'] = self.error_class(['Inventurni broj več postoji!'])
+
+
+        if not naziv:
+            self._errors['naziv'] = self.error_class(['Ovo polje je obavezno'])
+        if not proizvodjac:
+            self._errors['proizvodjac'] = self.error_class(['Ovo polje je obavezno'])
+        if not sr_broj:
+            self._errors['sr_broj'] = self.error_class(['Ovo polje je obavezno'])
+                
+        return self.cleaned_data
+
+        
+
+
+
+class AlatSearchForm(forms.ModelForm):
+    class Meta:
+        model = Alat
+        fields = ['inv_broj','naziv','proizvodjac','sr_broj']
+
+class AlatUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Alat
+        fields = ['naziv','proizvodjac','sr_broj']
+
+class AlatZaduziForm(forms.ModelForm):
+    class Meta:
+        model = Alat
+        fields = ['zaduzio']
+
+    def clean(self):
+            super(AlatZaduziForm, self).clean()
+
+            zaduzio = self.cleaned_data.get('zaduzio')
+            
+            
+            if not zaduzio:
+                self._errors['zaduzio'] = self.error_class(['Ovo polje je obavezno'])
+
+            return self.cleaned_data
+
+""" class OptikaHistorySearchForm(forms.ModelForm):
+    class Meta:
+        model = KabelOptikaHistory
+        fields = ['inv_broj','naziv','tip_kabela','proizvodjac','vlasnik','radnja','export_to_CSV'] #srediti pretragu zaduženja
+ """
 #########
 class SkladisteCreateForm(forms.ModelForm):
     
@@ -531,3 +606,4 @@ class ZaduzivanjeForm(forms.ModelForm):
     class Meta:
         model = Skladiste
         fields = ['zaduzena_kolicina', 'zaduzio']
+

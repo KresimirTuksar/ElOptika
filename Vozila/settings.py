@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'widget_tweaks',
+    'crispy_forms',
     
 
     'auti_app',
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     'elektrooptika',
     'dashboard',
     'Skladiste',
+
 ]
 
 MIDDLEWARE = [

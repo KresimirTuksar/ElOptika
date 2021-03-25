@@ -4,7 +4,7 @@
 
 {% block frame %}
 
-    
+<h1>Skladiste - CIJEVI</h1>
 
 {% if messages %}
         <ul style="list-style: none;" class="alert alert-info messages">
@@ -29,7 +29,7 @@
         <tbody>
             <tr>
                 <td>{{item.inv_broj}}</td>
-                <td><a href="{% url 'skladiste_app:bakar_detalji' item.id %}">{{item.naziv}}</a></td>
+                <td><a href="{% url 'skladiste_app:cijev_detalji' item.id %}">{{item.naziv}}</a></td>
                 <td>{{item.tip_kabela}}</td>
                 <td>{{item.proizvodjac}}</td>
                 <td>{{item.vlasnik}}</td>
@@ -58,18 +58,18 @@
         
         <div class="pretraga">
             <h3>Pretraga</h3>
-            <div>
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    {% for field in form %}
-                        {{field.label_tag}}
-                        {% render_field field class="form-control" %}
-                    {% endfor %}
-                        
-                    <input class="btn btn-outline-success btn-block" type="submit" value="Traži">
-                </form>
-            </div>
             
+                <button class="btn btn-outline-success btn-block" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    Pretraga <span class="bi bi-search"></span>
+                </button>
+                <div class="collapse" id="collapseExample">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        {% include 'includes/searchform.html' %}
+                            
+                        <input class="btn btn-outline-success btn-block" type="submit" value="Traži">
+                    </form>
+                </div>
         </div>
         
         

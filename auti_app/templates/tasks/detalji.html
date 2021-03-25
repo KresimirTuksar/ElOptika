@@ -1,0 +1,74 @@
+{% extends 'dash_base.html' %}
+
+{% load widget_tweaks %}
+
+
+{% block frame %}
+    <h1>Detalji za: {{queryset.marka}} {{queryset.ime}}</h1>
+    {% if messages %}
+      <ul style="list-style: none;" class="alert alert-success messages">
+        {% for message in messages %}
+          <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    
+    <div class="row">
+        <div class="col-sm">
+            <b>Model</b>
+            <p>{{queryset.ime}}</p>
+        </div>
+        <div class="col-sm">
+          <b>Proizvođač</b>
+          <p>{{queryset.marka}}</p>
+        </div>
+        <div class="col-sm">
+          <b>Registracija</b>
+          <p>{{queryset.tablica}}</p>
+        </div>
+        <div class="col-sm">
+            <b>Tehnički</b>
+            
+            {% if queryset.istek_rege %}
+              <p style="background-color:red;color:white">{{queryset.registracija_datum}}</p>
+            {% else %}
+              <p>{{queryset.registracija_datum}}</p>
+            {% endif %}
+              
+          </div>
+    </div>
+    <hr>
+    <div class="row justify-content-center">
+        <div class="col-sm">
+            <b>Zadnji servis</b>
+            <p>{{queryset.servis_datum}}</p>
+        </div>
+        <div class="col-sm">
+            <b>Kilometraža</b>
+            
+            {% if queryset.do_servisa <= 500 %}
+              <a href="{% url 'auti_app:kilometrilista' queryset.id %}"><p style="background-color:red;color:white;">{{queryset.zavrsna}}</p></a>
+            {% else %}
+              <a href="{% url 'auti_app:kilometrilista' queryset.id %}"><p>{{queryset.zavrsna}}</p></a>
+            {% endif %}
+        </div>
+        <div class="col-sm">
+            <b>Servis na</b>
+            <p>{{queryset.servis_kilometri}}</p>
+        </div>
+        <div class="col-sm">
+          <b>Atest</b>
+          {% if queryset.istek_atest %}
+              <p style="background-color:red;color:white">{{queryset.atest}}</p>
+            {% else %}
+              <p>{{queryset.atest}}</p>
+            {% endif %}
+        </div>
+    </div>
+    <hr>
+    <a class="btn btn-sm btn-info" href="{% url 'auti_app:uredi_automobil' queryset.id %}">Uredi</a>
+    <a class="btn btn-sm btn-danger" href=" {%url 'auti_app:obrisi_automobil' queryset.id %}">Obriši</a>
+    <a class="btn btn-sm btn-danger" href=" {%url 'auti_app:kilometri' queryset.id %}">Kilometri</a>
+        
+{% endblock frame %}
+    

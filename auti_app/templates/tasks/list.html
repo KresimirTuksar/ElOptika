@@ -2,61 +2,66 @@
 {% extends 'dash_base.html' %}
 
 {% block frame %}
+
+  {% if messages %}
+  <ul style="list-style: none;" class="alert alert-success messages">
+    {% for message in messages %}
+          <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
   <h2>Automobili</h2>
     
       
       
-      <a class="btn btn-primary" href=" {% url 'auti_app:dodaj_automobil' %} ">Dodaj Automobil</a>
+      <a class="btn btn-primary" href="{% url 'auti_app:dodaj_automobil' %}">Dodaj Automobil</a>
       <br>
       <br>
       
-      {% for auto in auti %}
-        <table class="table table-striped table-secondary">
+      
+        <table class="table table-hover table-sm table-responsive-sm">
           <thead>
-            <tr>
-              <th>Auto</th>
-              <th>{{auto.ime}}</th>
+            <tr class="text-center">
+              <th>Model</th>
+              <th>Proizvođač</th>
+              <th>Registarska oznaka</th>
+              <th>Kilometraža</th>
             </tr>
           </thead>
-
           <tbody>
-            <tr>
-              <td>Proizvođač</td>
-              <td>{{auto.marka}}</td>
-            </tr>
-            <tr>
-              <td>Registarska oznaka</td>
-              <td>{{auto.tablica}}</td>
-            </tr>
-            <tr>
-              <td>Registriran</td>
-              <td>{{auto.registracija}}</td>
-            </tr>
-            <tr>
-              <td>Servisiran</td>
-              <td>{{auto.servis}}</td>
-            </tr>
-            <tr>
-              <td>Servisiran na km</td>
-              <td>{{auto.servis_kilometri}}</td>
-            </tr>
+            {% for auto in queryset %}
+              
+              {% if auto.do_servisa <= 1000 %}
+              <tr class="text-center alert alert-danger">
+                <td><a href="{% url 'auti_app:detalji' auto.id %} "><b>{{auto.ime}}</b></a></td>
+                <td>{{auto.marka}}</td>
+                <td>{{auto.tablica}}</td>
+                <td>{{auto.zavrsna}}</td>
+              </tr>
+              {% else %}
+              <tr class="text-center">
+                <td><a href="{% url 'auti_app:detalji' auto.id %} "><b>{{auto.ime}}</b></a></td>
+                <td>{{auto.marka}}</td>
+                <td>{{auto.tablica}}</td>
+                <td>{{auto.zavrsna}}</td>
+              </tr>
+              {% endif %}
+                
+                
+            {% endfor %}
           </tbody>
       </table>
-      <a class="btn btn-sm btn-info" href="{% url 'auti_app:uredi_automobil' auto.id %}">Uredi</a>
-      <a class="btn btn-sm btn-danger" href=" {%url 'auti_app:obrisi_automobil' auto.id %}">Obriši</a>
+      
       <br>
       <br>
       <br>
-      {% endfor %}
+      
       
     
 {% endblock frame %}
 
 
 {% block sidebar %}
-  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi, recusandae! Ab fugiat ullam dolorum vitae. Consequuntur laboriosam eum temporibus rerum, quisquam cumque provident quia tempora distinctio. Alias id incidunt a.</p>
-  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi, recusandae! Ab fugiat ullam dolorum vitae. Consequuntur laboriosam eum temporibus rerum, quisquam cumque provident quia tempora distinctio. Alias id incidunt a.</p>
-  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi, recusandae! Ab fugiat ullam dolorum vitae. Consequuntur laboriosam eum temporibus rerum, quisquam cumque provident quia tempora distinctio. Alias id incidunt a.</p>
 
 {% endblock sidebar %}
   
