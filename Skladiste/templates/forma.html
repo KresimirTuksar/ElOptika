@@ -1,14 +1,12 @@
 {% extends 'dash_base.html' %}
 
-{% load widget_tweaks %}
 
+{% block info %}
+    {% include 'includes/info.html' %}
+{% endblock info %}
+    
 
 {% block content %}
     {% include 'includes/form.html' %}
 {% endblock content %}
     
-
-{% block sidebar %}
-    
-{% endblock sidebar %}
-   

@@ -1,0 +1,30 @@
+.reorder{
+    height: 200px;
+    overflow:auto;
+}
+
+.col-sm{
+    margin: 10px 5px 0px 5px; 
+}
+
+a.skl_ime{
+    display: block;
+    text-decoration: none;
+}
+
+a.skl_ime:hover{
+    background-color: aliceblue ;
+}
+.row.gumbi{
+    margin:10px 0px 0px 0px;
+    padding: 0px px 0px px;
+}
+
+.col-sm.gumbi{
+    padding:0px;
+    margin: 5px;
+}
+
+.thistory{
+    margin-top: 15px;
+}

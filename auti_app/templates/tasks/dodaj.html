@@ -2,7 +2,7 @@
 
 {% load widget_tweaks %}
 
-{% block frame %}
+{% block content %}
     <div class="container">
         {% if messages %}
             <ul class="messages">
@@ -36,12 +36,10 @@
             </div>
             {% endfor %}
 
-            <input type="submit" class="btn btn-outline-success" value="Pošalji">
+            <input type="submit" class="btn btn-outline-success" value="U redu">
+            <a class="btn btn-link" href="{% url 'auti_app:lista' %}">Natrag</a>
         </form>
     </div>
-{% endblock frame %}
+{% endblock content %}
     
 
-{% block sidebar %}
-    <a href="{% url 'skladiste_app:skladiste'%}"></a>
-{% endblock sidebar %}

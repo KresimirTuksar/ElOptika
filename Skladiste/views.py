@@ -11,6 +11,22 @@ from django.http import HttpResponse, request, response
 import csv
 # Create your views here.
 
+#dodaj tip kabela
+@login_required
+def dodaj_tip(request):
+    form = DodajTipForm()
+    if request.method == 'POST':
+        form = DodajTipForm(request.POST)
+        if form.is_valid:
+            form.save()
+            messages.success(request, 'Tip kabela dodan!')
+            return redirect('skladiste_app:skladiste')
+
+    context = {'form':form}
+    return render(request, 'forma.html', context)
+
+
+
 #kablovi - OPTIKA
 
 @login_required
@@ -24,14 +40,14 @@ def listoptika(request):
         #tip_kabela = (form['tip_kabela'].value)
         queryset = KabelOptika.objects.filter(naziv__icontains = form['naziv'].value(),
                                             inv_broj__icontains = form['inv_broj'].value(),
-                                            #tip_kabela__tip__contains = form['tip_kabela'].value(),
+                                            tip_kabela__tip__icontains =form['tip_kabela'].value(),
                                             vlasnik__icontains = form['vlasnik'].value(),
                                             broj_niti__icontains = form['broj_niti'].value(),
                                             proizvodjac__icontains = form['proizvodjac'].value()
         
         )
         #if (tip_kabela != ''):
-        #    queryset = queryset.filter(tip_kabela_id = tip_kabela)
+            #queryset = queryset.filter(tip_kabela_id = tip_kabela)
 
         if form['export_to_CSV'].value() == True:
             response = HttpResponse(content_type='text/csv')
@@ -67,21 +83,9 @@ def optika_dodaj(request):
             return redirect('skladiste_app:listoptika')
 
     context = {'form': form, 'queryset':queryset}
-    return render(request, 'dodaj.html', context)
+    return render(request, 'forma.html', context)
 
 
-@login_required
-def dodaj_tip(request):
-    form = DodajTipForm()
-    if request.method == 'POST':
-        form = DodajTipForm(request.POST)
-        if form.is_valid:
-            form.save()
-            messages.success(request, 'Tip kabela dodan!')
-            return redirect('skladiste_app:listoptika')
-
-    context = {'form':form}
-    return render(request, 'dodaj_kategoriju.html', context)
 
 
 @login_required
@@ -101,7 +105,7 @@ def optika_uredi(request, pk):
 		form = OptikaUpdateForm(request.POST, instance=queryset)
 		if form.is_valid():
 			form.save()
-			return redirect('skladiste_app:listoptika')
+			return redirect('skladiste_app:optika_detalji', pk)
 
 	context = {'form':form}
 
@@ -146,7 +150,7 @@ def optika_izdaj(request, pk):
             )
             history.save()
 
-            return redirect('skladiste_app:listoptika')
+            return redirect('skladiste_app:optika_detalji', pk)
 
     context = {'queryset':queryset,
             
@@ -163,7 +167,7 @@ def optika_obrisi(request, pk):
     if request.method == 'POST':
         queryset.delete()
         return redirect('skladiste_app:listoptika')
-    return render(request, 'obrisi_artikl.html')
+    return render(request, 'forma.html')
 
 @login_required
 def optika_reorder_level(request, pk):
@@ -175,7 +179,7 @@ def optika_reorder_level(request, pk):
             instance.save()
             messages.success(request, 'Nivo naručivanja za ' + str(instance.naziv) + ' postavljen je na ' + str(instance.reorder_level) + '.')
 
-            return redirect('skladiste_app:listoptika')
+            return redirect('skladiste_app:optika_detalji', pk)
 
     context = {'instance': queryset, 'form': form}
     return render (request, 'reorder_level.html', context)
@@ -270,21 +274,9 @@ def bakar_dodaj(request):
             return redirect('skladiste_app:listbakar')
 
     context = {'form': form, 'queryset':queryset}
-    return render(request, 'dodaj.html', context)
+    return render(request, 'forma.html', context)
 
 
-@login_required
-def dodaj_tip(request):
-    form = DodajTipForm()
-    if request.method == 'POST':
-        form = DodajTipForm(request.POST)
-        if form.is_valid:
-            form.save()
-            messages.success(request, 'Tip kabela dodan!')
-            return redirect('skladiste_app:listbakar')
-
-    context = {'form':form}
-    return render(request, 'dodaj_kategoriju.html', context)
 
 
 @login_required
@@ -304,11 +296,11 @@ def bakar_uredi(request, pk):
 		form = BakarUpdateForm(request.POST, instance=queryset)
 		if form.is_valid():
 			form.save()
-			return redirect('skladiste_app:listbakar')
+			return redirect('skladiste_app:bakar_detalji', pk)
 
 	context = {'form':form}
 
-	return render(request, 'uredi_artikl.html', context)
+	return render(request, 'forma.html', context)
 
 
 @login_required
@@ -328,7 +320,7 @@ def bakar_izdaj(request, pk):
             else:
                 messages.error(request,'Nedovoljno kabela')
                 context = {'queryset':queryset,'form':form}
-                return  render(request, 'izdavanje.html', context)
+                return  render(request, 'forma.html', context)
             # kopiranje odabranog objekta u history
             history = KabelBakarHistory.objects.create(
                 #id = instance.id,
@@ -347,14 +339,14 @@ def bakar_izdaj(request, pk):
             )
             history.save()
 
-            return redirect('skladiste_app:listbakar')
+            return redirect('skladiste_app:bakar_detalji', pk)
 
     context = {'queryset':queryset,
                 'form':form,
                 'username': 'Izdao: '+str(request.user)
     }
 
-    return  render(request, 'izdavanje.html', context)
+    return  render(request, 'forma.html', context)
 
 
 @login_required
@@ -375,10 +367,10 @@ def bakar_reorder_level(request, pk):
             instance.save()
             messages.success(request, 'Nivo naručivanja za ' + str(instance.naziv) + ' postavljen je na ' + str(instance.reorder_level) + '.')
 
-            return redirect('skladiste_app:listbakar')
+            return redirect('skladiste_app:bakar_detalji', pk)
 
     context = {'instance': queryset, 'form': form}
-    return render (request, 'reorder_level.html', context)
+    return render (request, 'forma.html', context)
 
 @login_required
 def bakar_history(request):
@@ -471,21 +463,8 @@ def utp_dodaj(request):
             return redirect('skladiste_app:listutp')
 
     context = {'form': form, 'queryset':queryset}
-    return render(request, 'dodaj.html', context)
+    return render(request, 'forma.html', context)
 
-
-@login_required
-def dodaj_tip(request):
-    form = DodajTipForm()
-    if request.method == 'POST':
-        form = DodajTipForm(request.POST)
-        if form.is_valid:
-            form.save()
-            messages.success(request, 'Tip kabela dodan!')
-            return redirect('skladiste_app:listutp')
-
-    context = {'form':form}
-    return render(request, 'dodaj_kategoriju.html', context)
 
 
 @login_required
@@ -505,11 +484,11 @@ def utp_uredi(request, pk):
 		form = UtpUpdateForm(request.POST, instance=queryset)
 		if form.is_valid():
 			form.save()
-			return redirect('skladiste_app:listutp')
+			return redirect('skladiste_app:utp_detalji', pk)
 
 	context = {'form':form}
 
-	return render(request, 'uredi_artikl.html', context)
+	return render(request, 'forma.html', context)
 
 
 @login_required
@@ -529,7 +508,7 @@ def utp_izdaj(request, pk):
             else:
                 messages.error(request,'Nedovoljno kabela')
                 context = {'queryset':queryset,'form':form}
-                return  render(request, 'izdavanje.html', context)
+                return  render(request, 'forma.html', context)
             # kopiranje odabranog objekta u history
             history = KabelUtpHistory.objects.create(
                 #id = instance.id,
@@ -547,14 +526,14 @@ def utp_izdaj(request, pk):
             )
             history.save()
 
-            return redirect('skladiste_app:listutp')
+            return redirect('skladiste_app:utp_detalji', pk)
 
     context = {'queryset':queryset,
                 'form':form,
                 'username': 'Izdao: '+str(request.user)
     }
 
-    return  render(request, 'izdavanje.html', context)
+    return  render(request, 'forma.html', context)
 
 
 @login_required
@@ -575,10 +554,10 @@ def utp_reorder_level(request, pk):
             instance.save()
             messages.success(request, 'Nivo naručivanja za ' + str(instance.naziv) + ' postavljen je na ' + str(instance.reorder_level) + '.')
 
-            return redirect('skladiste_app:listoptika')
+            return redirect('skladiste_app:utp_detalji', pk)
 
     context = {'instance': queryset, 'form': form}
-    return render (request, 'reorder_level.html', context)
+    return render (request, 'forma.html', context)
 
 @login_required
 def utp_history(request):
@@ -668,24 +647,13 @@ def cijev_dodaj(request):
             kreirao = str(request.user)
             form.save()
             messages.success(request, 'Uspješno dodano!')
-            return redirect('skladiste_app:listcijev')
+            return redirect('skladiste_app:listcijevi')
 
     context = {'form': form, 'queryset':queryset}
-    return render(request, 'dodaj.html', context)
+    return render(request, 'forma.html', context)
 
 
-@login_required
-def dodaj_tip(request):
-    form = DodajTipForm()
-    if request.method == 'POST':
-        form = DodajTipForm(request.POST)
-        if form.is_valid:
-            form.save()
-            messages.success(request, 'Tip kabela dodan!')
-            return redirect('skladiste_app:listbakar')
 
-    context = {'form':form}
-    return render(request, 'dodaj_kategoriju.html', context)
 
 
 @login_required
@@ -693,7 +661,7 @@ def cijev_detalji(request, pk):
     queryset = Cijev.objects.get(id=pk)
     context = {'queryset':queryset}
     
-    return render(request, 'cijev_detalji.html', context)
+    return render(request, 'cijevi_detalji.html', context)
 
 @login_required
 def cijev_uredi(request, pk):
@@ -705,11 +673,11 @@ def cijev_uredi(request, pk):
 		form = CijevUpdateForm(request.POST, instance=queryset)
 		if form.is_valid():
 			form.save()
-			return redirect('skladiste_app:listcijev')
+			return redirect('skladiste_app:cijevi_detalji', pk)
 
 	context = {'form':form}
 
-	return render(request, 'uredi_artikl.html', context)
+	return render(request, 'forma.html', context)
 
 
 @login_required
@@ -729,7 +697,7 @@ def cijev_izdaj(request, pk):
             else:
                 messages.error(request,'Nedovoljno kabela')
                 context = {'queryset':queryset,'form':form}
-                return  render(request, 'izdavanje.html', context)
+                return  render(request, 'forma.html', context)
             # kopiranje odabranog objekta u history
             history = CijevHistory.objects.create(
                 #id = instance.id,
@@ -737,7 +705,7 @@ def cijev_izdaj(request, pk):
                 naziv = instance.naziv,
                 proizvodjac = instance.proizvodjac,
                 vlasnik = instance.vlasnik,
-                vrsta_cijevi = instance.vrsta_cjevi,
+                vrsta_cijevi = instance.vrsta_cijevi,
                 promjer = instance.promjer,
                 metraza = instance.metraza,
                 izdana_metraza = instance.izdana_metraza,
@@ -748,22 +716,22 @@ def cijev_izdaj(request, pk):
             )
             history.save()
 
-            return redirect('skladiste_app:listcijev')
+            return redirect('skladiste_app:cijevi_detalji', pk)
 
     context = {'queryset':queryset,
                 'form':form,
                 'username': 'Izdao: '+str(request.user)
     }
 
-    return  render(request, 'izdavanje.html', context)
+    return  render(request, 'forma.html', context)
 
 
 @login_required
 def cijev_obrisi(request, pk):
-    queryset = KabelBakar.objects.get(id=pk)
+    queryset = Cijev.objects.get(id=pk)
     if request.method == 'POST':
         queryset.delete()
-        return redirect('skladiste_app:listcijev')
+        return redirect('skladiste_app:listcijevi')
     return render(request, 'obrisi_artikl.html')
 
 @login_required
@@ -776,10 +744,10 @@ def cijev_reorder_level(request, pk):
             instance.save()
             messages.success(request, 'Nivo naručivanja za ' + str(instance.naziv) + ' postavljen je na ' + str(instance.reorder_level) + '.')
 
-            return redirect('skladiste_app:listcijev')
+            return redirect('skladiste_app:cijevi_detalji', pk)
 
     context = {'instance': queryset, 'form': form}
-    return render (request, 'reorder_level.html', context)
+    return render (request, 'forma.html', context)
 
 @login_required
 def cijev_history(request):
@@ -815,7 +783,7 @@ def cijev_history(request):
 
             context = {'form':form, 'queryset':queryset}
 
-    return render(request, 'bakarhistory.html', context)
+    return render(request, 'cijevihistory.html', context)
 ###########################
 
 #MATERIJAL
@@ -869,7 +837,7 @@ def materijal_dodaj(request):
             return redirect('skladiste_app:listmaterijal')
 
     context = {'form': form, 'queryset':queryset}
-    return render(request, 'dodaj.html', context)
+    return render(request, 'forma.html', context)
 
 
 
@@ -892,11 +860,11 @@ def materijal_uredi(request, pk):
 		form = UtpUpdateForm(request.POST, instance=queryset)
 		if form.is_valid():
 			form.save()
-			return redirect('skladiste_app:listmaterijal')
+			return redirect('skladiste_app:materijal_detalji', pk)
 
 	context = {'form':form}
 
-	return render(request, 'materijal_uredi.html', context)
+	return render(request, 'forma.html', context)
 
 
 @login_required
@@ -916,7 +884,7 @@ def materijal_izdaj(request, pk):
             else:
                 messages.error(request,'Nedovoljno na skladištu.')
                 context = {'queryset':queryset,'form':form}
-                return  render(request, 'izdavanje.html', context)
+                return  render(request, 'forma.html', context)
             # kopiranje odabranog objekta u history
             history = MaterijalHistory.objects.create(
                 #id = instance.id,
@@ -932,14 +900,14 @@ def materijal_izdaj(request, pk):
             )
             history.save()
 
-            return redirect('skladiste_app:listmaterijal')
+            return redirect('skladiste_app:materijal_detalji', pk)
 
     context = {'queryset':queryset,
                 'form':form,
                 'username': 'Izdao: '+str(request.user)
     }
 
-    return  render(request, 'izdavanje.html', context)
+    return  render(request, 'forma.html', context)
 
 
 @login_required
@@ -960,7 +928,7 @@ def materijal_reorder_level(request, pk):
             instance.save()
             messages.success(request, 'Nivo naručivanja za ' + str(instance.naziv) + ' postavljen je na ' + str(instance.reorder_level) + '.')
 
-            return redirect('skladiste_app:listoptika')
+            return redirect('skladiste_app:materijal_detalji', pk)
 
     context = {'instance': queryset, 'form': form}
     return render (request, 'reorder_level.html', context)
@@ -968,7 +936,7 @@ def materijal_reorder_level(request, pk):
 @login_required
 def materijal_history(request):
     form = UtpHistorySearchForm(request.POST)
-    queryset = KabelUtpHistory.objects.all()
+    queryset = MaterijalHistory.objects.all()
     context = {'queryset':queryset, 'form':form}
     
     
@@ -1066,17 +1034,17 @@ def alat_detalji(request, pk):
 def alat_uredi(request, pk):
 	queryset = Alat.objects.get(id=pk)
 
-	form = AlatUpdateForm()
+	form = AlatUpdateForm(instance = queryset)
 
 	if request.method == 'POST':
-		form = AlatUpdateForm(request.POST)
+		form = AlatUpdateForm(request.POST, instance = queryset)
 		if form.is_valid():
 			form.save()
-			return redirect('skladiste_app:listalat')
+			return redirect('skladiste_app:alat_detalji', pk)
 
-	context = {'form':form}
+	context = {'queryset':queryset, 'form':form}
 
-	return render(request, 'alat_uredi.html', context)
+	return render(request, 'forma.html', context)
 
 
 @login_required
@@ -1092,14 +1060,14 @@ def alat_zaduzi(request, pk):
             messages.success(request, 'Uspješno izdano.')
             instance.save()
             
-            return redirect('skladiste_app:listalat')
+            return redirect('skladiste_app:alat_detalji', pk)
 
     context = {'queryset':queryset,
                 'form':form,
                 'username': 'Izdao: '+str(request.user)
     }
 
-    return  render(request, 'izdavanje.html', context)
+    return  render(request, 'forma.html', context)
 
 @login_required
 def alat_obrisi(request, pk):
@@ -1109,6 +1077,8 @@ def alat_obrisi(request, pk):
         return redirect('skladiste_app:listalat')
     return render(request, 'obrisi_artikl.html')
 #################################
+
+#SKLADISTE DASH
 @login_required
 def skladiste(request):
     optika = KabelOptika.objects.all()
@@ -1128,172 +1098,3 @@ def skladiste(request):
 
     
     return render(request,'skladiste.html', context )
-
-    
-@login_required
-def dodaj(request):
-    form = SkladisteCreateForm()
-
-    if request.method =='POST':
-        form = SkladisteCreateForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Uspješno dodano!')
-            return redirect('skladiste_app:skladiste')
-
-    context = {'form': form,}
-    return render(request, 'dodaj.html', context)
-
-@login_required
-def dodaj_kategoriju(request):
-    form = DodajKategorijuForm()
-    if request.method == 'POST':
-        form = DodajKategorijuForm(request.POST)
-        if form.is_valid:
-            form.save()
-            messages.success(request, 'Kategorija dodana!')
-            return redirect('skladiste_app:skladiste')
-
-    context = {'form':form}
-    return render(request, 'dodaj_kategoriju.html', context)
-
-
-@login_required
-def uredi(request, pk):
-	queryset = Skladiste.objects.get(id=pk)
-
-	form = SkladisteUpdateForm(instance = queryset)
-
-	if request.method == 'POST':
-		form = SkladisteUpdateForm(request.POST, instance=queryset)
-		if form.is_valid():
-			form.save()
-			return redirect('skladiste_app:skladiste')
-
-	context = {'form':form}
-
-	return render(request, 'uredi_artikl.html', context)
-
-@login_required
-def obrisi_artikl(request, pk):
-    queryset = Skladiste.objects.get(id=pk)
-    if request.method == 'POST':
-        queryset.delete()
-        return redirect('skladiste_app:skladiste')
-    return render(request, 'obrisi_artikl.html')
-
-@login_required
-def detalji(request, pk):
-    queryset = Skladiste.objects.get(id=pk)
-    context = {'queryset' : queryset}
-    
-    return render(request, 'artikl_detalji.html', context)
-
-@login_required
-def izdavanje(request, pk):
-    queryset = Skladiste.objects.get(id=pk)
-    form = IzdavanjeForm(request.POST, instance=queryset)
-
-    if request.method =='POST':
-        if form.is_valid():
-            instance = form.save(commit=False)
-            instance.kolicina -= instance.izdana_kolicina
-            instance.izdao = str(request.user)
-            instance.save()
-
-            # kopiranje odabranog objekta u history
-            history = SkladisteHistory(
-                id = instance.id,
-                zadnje_osvjezeno = instance.zadnje_osvjezeno,
-                kategorija_id = instance.kategorija_id,
-                naziv = instance.naziv,
-                kolicina = instance.kolicina,
-                izdano_na = instance.izdano_na,
-                izdao = instance.izdao,
-                izdana_kolicina = instance.izdana_kolicina,
-            )
-            history.save()
-
-            messages.success(request, 'Uspješno izdano. Još ' + str(instance.kolicina) + ' ' + str(instance.naziv) + ' ostalo na skladištu.')
-            return redirect('skladiste_app:skladiste')
-
-    context = {'queryset':queryset,
-                'form':form,
-                'username': 'Izdao: '+str(request.user)
-    }
-
-    return  render(request, 'izdavanje.html', context)
-
-@login_required
-def zaprimanje(request, pk):
-    queryset = Skladiste.objects.get(id=pk)
-    form = ZaprimanjeForm(request.POST, instance=queryset)
-
-    if request.method =='POST':
-        if form.is_valid():
-            instance = form.save(commit=False)
-            instance.kolicina += instance.primljena_kolicina
-            instance.zaprimio = str(request.user)
-            instance.save()
-            messages.success(request, 'Artikl zaprimljen. Trenutno je ' + str(instance.kolicina) + ' ' + str(instance.naziv) + ' na skladištu.')
-
-            #kopiranje odabranog objekta u history
-            history = SkladisteHistory(
-                id = instance.id,
-                zadnje_osvjezeno = instance.zadnje_osvjezeno,
-                kategorija_id = instance.kategorija_id,
-                naziv = instance.naziv,
-                kolicina = instance.kolicina,
-                primljena_kolicina = instance.primljena_kolicina,
-                zaprimio = instance.zaprimio,
-            )
-            history.save()
-            return redirect('skladiste_app:skladiste')
-
-    context = {'queryset':queryset,
-                'form':form,
-                'username': 'Izdao: '+str(request.user)
-    }
-
-
-    return  render(request, 'izdavanje.html', context)
-
-def zaduzivanje(request, pk):
-    queryset = Skladiste.objects.get(id=pk)
-    form = ZaduzivanjeForm(request.POST, instance=queryset)
-    user = User.objects.all()
-
-    if request.method == 'POST':
-        """ povlačenje vrijednosti sklaiz forme za manytomanyfield """
-        if form.is_valid():
-            
-            instance = form.save(commit = False)
-            instance.save()
-            form.save_m2m()
-
-            return redirect('skladiste_app:skladiste')
-
-    context = {'form': form,'queryset':queryset,}
-    return render(request, 'zaduzivanje.html', context)
-
-@login_required
-def reorder_level(request, pk):
-    queryset = Skladiste.objects.get(id=pk)
-    form = ReorderLevelForm(request.POST or None, instance = queryset)
-    if request.method == 'POST':
-        if form.is_valid():
-            instance = form.save(commit=False)
-            instance.save()
-            messages.success(request, 'Nivo naručivanja za ' + str(instance.naziv) + ' postavljen je na ' + str(instance.reorder_level) + '.')
-
-            return redirect('skladiste_app:skladiste')
-
-    context = {'instance': queryset, 'form': form}
-    return render (request, 'reorder_level.html', context)
-
-@login_required
-def skladiste_history(request):
-    queryset = SkladisteHistory.objects.all()
-    context = {'queryset':queryset}
-
-    return render(request, 'skladiste_history.html', context)

@@ -3,17 +3,27 @@
 {% load widget_tweaks %}
 
 
-{% block frame %}
-    <h1>Detalji za: {{queryset.marka}} {{queryset.ime}}</h1>
+{% block info %}
+  <div style="height:50px;" class="info">
     {% if messages %}
-      <ul style="list-style: none;" class="alert alert-success messages">
-        {% for message in messages %}
-          <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
+        <ul style="list-style: none;" class="alert alert-success messages">
+          {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+  </div>
     
-    <div class="row">
+{% endblock info %}
+  
+  
+{% block content %}
+  
+    <h1>Detalji za: {{queryset.marka}} {{queryset.ime}}</h1>
+    
+    <hr>
+    
+    <div class="row text-center" >
         <div class="col-sm">
             <b>Model</b>
             <p>{{queryset.ime}}</p>
@@ -38,7 +48,7 @@
           </div>
     </div>
     <hr>
-    <div class="row justify-content-center">
+    <div class="row text-center">
         <div class="col-sm">
             <b>Zadnji servis</b>
             <p>{{queryset.servis_datum}}</p>
@@ -65,10 +75,18 @@
             {% endif %}
         </div>
     </div>
+    
+
     <hr>
-    <a class="btn btn-sm btn-info" href="{% url 'auti_app:uredi_automobil' queryset.id %}">Uredi</a>
-    <a class="btn btn-sm btn-danger" href=" {%url 'auti_app:obrisi_automobil' queryset.id %}">Obriši</a>
-    <a class="btn btn-sm btn-danger" href=" {%url 'auti_app:kilometri' queryset.id %}">Kilometri</a>
-        
-{% endblock frame %}
+    
+    {% if user.is_superuser %}
+      <a class="btn btn-sm btn-info" href="{% url 'auti_app:uredi_automobil' queryset.id %}">Uredi</a>
+      <a class="btn btn-sm btn-danger" href=" {%url 'auti_app:obrisi_automobil' queryset.id %}">Obriši</a>
+      <a class="btn btn-sm btn-warning" href=" {%url 'auti_app:kilometri' queryset.id %}">Kilometri</a>
+    {% else %}
+      <a class="btn btn-sm btn-warning" href=" {%url 'auti_app:kilometri' queryset.id %}">Kilometri</a>
+      
+    {% endif %}
+    <a href="{% url 'auti_app:lista' %}" class="btn btn-link" class>Natrag</a>
+{% endblock content %}
     

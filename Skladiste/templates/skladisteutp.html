@@ -1,79 +1,93 @@
 {% extends 'dash_base.html' %}
 
+{% load static %}
 {% load widget_tweaks %}
 
-{% block frame %}
+{% block exthead %}
+    <link rel="stylesheet" href="{% static 'Skladiste/css/master.css' %}">
+{% endblock exthead %}
 
-<h1>Skladiste - UTP</h1>
-
-{% if messages %}
-        <ul style="list-style: none;" class="alert alert-info messages">
-               {% for message in messages %}
-                     <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-               {% endfor %}
-       </ul>
-  {% endif %}
-
-<table class="table table-sm table-responsive-sm table-striped table-secondary">
-    <thead>
-        <th>Inventurni broj</th>
-        <th>Naziv</th>
-        <th>tip kabela</th>
-        <th>proizvođač</th>
-        <th>vlasnik</th>
-        <th>Preostalo metara</th>
-    </thead>
-
-    {% for item in queryset %}
-        <tbody>
-            <tr>
-                <td>{{item.inv_broj}}</td>
-                <td><a href="{% url 'skladiste_app:utp_detalji' item.id %}">{{item.naziv}}</a></td>
-                <td>{{item.tip_kabela}}</td>
-                <td>{{item.proizvodjac}}</td>
-                <td>{{item.vlasnik}}</td>
-                <td>
-                    {% if item.metraza <= item.reorder_level %}
-                        <div style="background-color: red;">
-                            {{item.metraza}}
-                        </div>
-                    {% else %}
-                        {{item.metraza}}
-                    {% endif %}
-                </td>
-            </tr>
-        </tbody>
-    {% endfor %}
-</table>   
-{% endblock frame %}
+{% block info %}
+    {% if messages %}
+    <ul style="list-style: none;" class="alert alert-info messages">
+        {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endblock info %}
     
-{% block sidebar %}
-    <div>
-        <a href="{% url 'skladiste_app:utp_dodaj' %}" class = "btn btn-success btn-block">Novi unos</a><br>
-        <a href="{% url 'skladiste_app:dodaj_tip' %}" class = "btn btn-primary btn-block">Novi tip kabela</a><br>
-        <a href="{% url 'skladiste_app:utp_history' %}" class = "btn btn-primary btn-block">History</a><br>
-        
-        
-        <div class="pretraga">
-            <h3>Pretraga</h3>
+{% block content %}
+<h1>Skladište - UTP</h1>
+
+
+<div class="row sadržaj">
+    <div class="col-sm-3 pretraga">
+        <div style="margin-top:5px;padding-top:10px" class="pretraga">
+            <!-- <h3>Pretraga</h3> -->
             
                 <button class="btn btn-outline-success btn-block" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                     Pretraga <span class="bi bi-search"></span>
                 </button>
                 <div class="collapse" id="collapseExample">
-                    <form action="" method="POST">
-                        {% csrf_token %}
-                        {% include 'includes/searchform.html' %}
-                            
-                        <input class="btn btn-outline-success btn-block" type="submit" value="Traži">
-                    </form>
+                    {% include 'includes/searchform.html' %}
                 </div>
         </div>
+    </div>
+    <div class="col-sm-9 skladiste">
+        <div class="row gumbi">
+            <div class="col-sm gumbi">
+                <a href="{% url 'skladiste_app:utp_dodaj' %}"  class = "btn btn-success btn-block">Novi unos</a>
+            </div>
+            
+            <div class="col-sm gumbi">
+                <a href="{% url 'skladiste_app:utp_history' %}" class = "btn btn-primary btn-block">History</a>
+            </div>
+        </div>
+        <table class="table table-sm  table-responsive-sm table-hover ">
+            <thead>
+                <th>Inventurni broj</th>
+                <th>Naziv</th>
+                <th>tip kabela</th>
+                <th>proizvođač</th>
+                <th>vlasnik</th>
+                <th>Preostalo metara</th>
+            </thead>
         
+            {% for item in queryset %}
+                <tbody>
+                    {% if item.metraza <= item.reorder_level %}
+                        <tr class="alert alert-danger">
+                            <td>{{item.inv_broj}}</td>
+                            <td><a href="{% url 'skladiste_app:utp_detalji' item.id %}">{{item.naziv}}</a></td>
+                            <td>{{item.tip_kabela}}</td>
+                            <td>{{item.proizvodjac}}</td>
+                            <td>{{item.vlasnik}}</td>
+                            
+                            <td>{{item.metraza}}</td>
+                        </tr>
+                    {% else %}
+                        <tr class="">
+                            <td>{{item.inv_broj}}</td>
+                            <td><a href="{% url 'skladiste_app:utp_detalji' item.id %}">{{item.naziv}}</a></td>
+                            <td>{{item.tip_kabela}}</td>
+                            <td>{{item.proizvodjac}}</td>
+                            <td>{{item.vlasnik}}</td>
+
+                            <td>{{item.metraza}}</td>
+                        </tr>
+                    {% endif %}
+                    
+                </tbody>
+            {% endfor %}
+        </table>   
         
     </div>
     
-    <br>
+</div>
+
+
+{% endblock content %}
     
-{% endblock sidebar %}
+
     

@@ -3,7 +3,7 @@
 {% load widget_tweaks %}
 
 
-{% block frame %}
+{% block content %}
     <div class="alert alert-danger">
         <h2>Jeste li sigurni da želite obrisati "{{queryset}}" u kategoriji "{{item.kategorija}}"?</h2>
     </div>
@@ -18,10 +18,6 @@
             <input class="btn btn-danger" type="submit" value="Potvrdi">
         </div>
     </form>
-{% endblock frame %}
+{% endblock content %}
     
 
-{% block sidebar %}
-    
-{% endblock sidebar %}
-    

@@ -1,21 +1,31 @@
 {% extends 'dash_base.html' %}
-
+{% load static %}
 {% load widget_tweaks %}
 
-{% block frame %}
 
-{% if messages %}
-        <ul style="list-style: none;" class="alert alert-info messages">
-               {% for message in messages %}
-                     <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-               {% endfor %}
-       </ul>
-  {% endif %}
-<div style="height: auto;" >
-    <div style="height: 200px;overflow:auto;" class="row">
-        <div class="col-sm">
-            <h4>Optika</h4>
-            <table class="table table-hover table-sm table-responsive">
+{% block exthead %}
+<link rel="stylesheet" href="{% static 'Skladiste/css/master.css' %}">
+{% endblock exthead %}
+    
+{% block info %}
+    <div style="height:50px;" class="info">
+        {% if messages %}
+            <ul style="list-style: none;" class="alert alert-success messages">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+{% endblock info %}
+    
+{% block content %}
+    <a href="{% url 'dash:dash' %}"class="btn btn-link">Natrag</a>
+    <a href="{% url 'skladiste_app:dodaj_tip' %}" class = "btn btn-primary">Novi tip kabela</a>
+    <div class="row">
+        <div class="col-sm reorder">
+            <h4><a class="skl_ime" href="{% url 'skladiste_app:listoptika' %}">Optika</a></h4>
+            <table class="table table-hover table-sm">
                 <thead>
                     <tr>
                         <th>Inv</th>
@@ -39,9 +49,9 @@
             </table>
             
         </div>
-        <div class="col-sm">
-            <h4>Bakar</h4>
-            <table class="table table-hover table-sm table-responsive">
+        <div class="col-sm reorder">
+            <h4><a  class="skl_ime" href="{% url 'skladiste_app:listbakar' %}">Bakar</a></h4>
+            <table class="table table-hover table-sm">
                 <thead>
                     <tr>
                         <th>Inv</th>
@@ -64,8 +74,8 @@
                     
             </table>
         </div>
-        <div class="col-sm">
-            <h4>Utp</h4>
+        <div class="col-sm reorder">
+            <h4><a class="skl_ime" href="{% url 'skladiste_app:listutp' %}">Utp</a></h4>
             <table class="table table-hover table-sm table-responsive">
                 <thead>
                     <tr>
@@ -90,8 +100,8 @@
             </table>
         </div>
         <div class="col-sm">
-            <h4>Cijevi</h4>
-            <table class="table table-hover table-sm table-responsive">
+            <h4><a class="skl_ime" href="{% url 'skladiste_app:listcijevi' %}">Cijevi</a></h4>
+            <table class="table table-hover table-sm ">
                 <thead>
                     <tr>
                         <th>Inv</th>
@@ -115,8 +125,8 @@
             </table>
         </div>
         <div class="col-sm">
-            <h4>Materijal</h4>
-            <table class="table table-hover table-sm table-responsive">
+            <h4><a class="skl_ime" href="{% url 'skladiste_app:listmaterijal' %}">Materijal</a></h4>
+            <table class="table table-hover table-sm">
                 <thead>
                     <tr>
                         <th>Inv</th>
@@ -141,9 +151,9 @@
         </div>
     </div>
     <div class="row" style="margin-top: 50px;" >
-        <div class="col">
-            <h4>Alat</h4>
-            <table class="table table-hover table-sm table-responsive">
+        <div class="col-sm">
+            <h4><a class="skl_ime" href="{% url 'skladiste_app:listalat' %}">Alat</a></h4>
+            <table class="table table-hover table-sm">
                 <thead>
                     <tr>
                         <th>Inv</th>
@@ -169,18 +179,16 @@
             </table>
         </div>
     </div>
-    
-</div>
-{% endblock frame %}
+{% endblock content %}
     
 {% block sidebar %}
     <div>
-        <a href="{% url 'skladiste_app:listoptika' %}">Skladiste optika</a><br>
-        <a href="{% url 'skladiste_app:listbakar' %}">Skladiste bakar</a><br>
-        <a href="{% url 'skladiste_app:listutp' %}">Skladiste utp</a><br>
-        <a href="{% url 'skladiste_app:listcijev' %}">Skladiste cijevi</a><br>
-        <a href="{% url 'skladiste_app:listmaterijal' %}">Skladiste materijal</a><br>
-        <a href="{% url 'skladiste_app:listalat' %}">Skladiste alati</a><br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
     </div>
     
     <br>

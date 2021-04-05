@@ -6,8 +6,7 @@ from django.forms.widgets import DateTimeInput
 
 # Create your models here.
 
-
-#
+#Trenutno Skladiste
 class Kategorija(models.Model):
     ime = models.CharField(max_length=50, blank=True, null=True,)
 
@@ -223,7 +222,7 @@ class KabelBakarHistory(models.Model):
 
 class KabelUtp(models.Model):
     inv_broj = IntegerField(default=0, blank=True, null=True, verbose_name='Inventurni broj')
-    naziv = models.CharField(max_length=50, verbose_name="Naziv")
+    naziv = models.CharField(max_length=50, blank=True, null=True, verbose_name="Naziv")
     proizvodjac = models.CharField(max_length=50, verbose_name='Proizvođač', blank=True, null=True)
     vlasnik = models.CharField(max_length=50, verbose_name="Vlasnik", blank=True, null=True,)
     tip_kabela = models.ForeignKey(TipKabela, verbose_name="Tip kabela", blank=True, null=True, on_delete=models.CASCADE)
@@ -243,7 +242,7 @@ class KabelUtp(models.Model):
 
 class KabelUtpHistory(models.Model):
     inv_broj = IntegerField(default=0, blank=True, null=True, verbose_name='Inventurni broj')
-    naziv = models.CharField(max_length=50, verbose_name="Naziv")
+    naziv = models.CharField(max_length=50, blank=True, null=True, verbose_name="Naziv")
     proizvodjac = models.CharField(max_length=50, verbose_name='Proizvođač', blank=True, null=True)
     vlasnik = models.CharField(max_length=50, verbose_name="Vlasnik", blank=True, null=True,)
     tip_kabela = models.ForeignKey(TipKabela, verbose_name="Tip kabela", blank=True, null=True, on_delete=models.CASCADE)
@@ -303,3 +302,43 @@ class CijevHistory(models.Model):
 
     def __str__(self):
         return self.naziv
+
+
+""" Test
+
+
+class Artikl(models.Model):
+    artikl = models.CharField(max_length=50, blank=True, null=True)
+
+    def __str__(self):
+        return self.artikl
+
+    
+
+
+class SkladisteTest(models.Model):
+    #generalno
+    sifra = IntegerField(default=0, blank=True, null=True, verbose_name='Šifra')
+    artikl = models.ForeignKey(Artikl, verbose_name="Vrsta artikla", blank=True, null=True, on_delete=models.CASCADE)
+    proizvodjac = models.CharField(blank=True, null=True, verbose_name='Proizvođač', max_length=50)
+    vlasnik = models.CharField(max_length=50, verbose_name="Vlasnik", blank=True, null=True,)
+    kreirao = models.CharField(max_length=50, blank=True, null=True)
+    kreirano = models.DateTimeField(auto_now=False, auto_now_add=True)
+    izdao = models.CharField(max_length=50, blank=True, null=True)
+    radnja = models.CharField(verbose_name='Radnja', max_length=50, blank=True, null=True)
+    reorder_level = models.IntegerField(default=0, blank=True, null=True) #kada naručiti
+    zadnje_osvjezeno = models.DateTimeField(verbose_name='Posljednje ažuriranje', auto_now=True, auto_now_add=False)
+    izdano_na = models.ForeignKey(User, blank=True, null=True, verbose_name="Izdaj na", on_delete=models.CASCADE)
+    export_to_CSV = models.BooleanField(default=False) #export u csv format
+    #optika i bakar
+    broj_niti = IntegerField(blank=True, null=True, verbose_name='Broj niti')
+    metraza = models.IntegerField(default=0, blank=True, null=True,verbose_name='Ukupna metraža')
+    izdana_metraza = models.IntegerField(blank=True, null=True, verbose_name='Izdano metara')
+    
+    export_to_CSV = models.BooleanField(default=False) #export u csv format
+
+    def __str__(self):
+        return 
+
+    def __unicode__(self):
+        return  """

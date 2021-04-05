@@ -1,2 +1,30 @@
 {% extends 'dash_base.html' %}
 
+{% load static %}
+
+
+{% block exthead %}
+    <link rel="stylesheet" href="{% static 'dashboard/css/master.css' %}">
+{% endblock exthead %}
+    
+<link rel="stylesheet" href="{% static 'dashboard/css/master.css' %}">
+    {% block info %}
+    {% endblock info %}
+
+
+{% block content %}
+    <div  class="row">
+        <div class="col-sm dash-item">
+            <a class="dash-link1"href="{% url 'skladiste_app:skladiste' %}">Skladište</a>
+        </div>
+        <div class="col-sm dash-item">
+            <a class="dash-link2" href="{% url 'auti_app:lista' %} ">Auti</a>
+        </div>
+        <div class="col-sm dash-item">
+            <a class="dash-link3" href="#">Radnje</a>
+        </div>
+    </div>
+    
+    
+{% endblock content %}
+    padding

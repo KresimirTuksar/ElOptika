@@ -31,24 +31,24 @@ urlpatterns = [
 #UTP
     path("skladiste/utp/", views.listutp, name='listutp'),
     path("skladiste/utp/novi_unos", views.utp_dodaj, name='utp_dodaj'),
-    path("skladiste/utp/dodaj_tip", views.dodaj_tip, name='dodaj_tip'),
+    path("skladiste/utp/dodaj_tip", views.dodaj_tip, name='utp_dodaj_tip'),
     path("skladiste/utp/uredi/<str:pk>", views.utp_uredi, name='utp_uredi'),
     path("skladiste/utp/detalji/<str:pk>/", views.utp_detalji, name='utp_detalji'),
     path("skladiste/utp/izdaj/<str:pk>/", views.utp_izdaj, name='utp_izdaj'),
     path("skladiste/utp/obrisi/<str:pk>/", views.utp_obrisi, name='utp_obrisi'),
     path("skladiste/utp/reorder_level/<str:pk>/", views.utp_reorder_level, name='utp_reorder_level'),
-    path("skladiste/utp/history/", views.bakar_history, name='utp_history'),
+    path("skladiste/utp/history/", views.utp_history, name='utp_history'),
 
-    #CIJEVI
-    path("skladiste/cijevi/", views.listcijev, name='listcijev'),
-    path("skladiste/cijevi/novi_unos", views.cijev_dodaj, name='cijev_dodaj'),
-    path("skladiste/cijevi/dodaj_tip", views.dodaj_tip, name='dodaj_tip'),
-    path("skladiste/cijevi/uredi/<str:pk>", views.cijev_uredi, name='cijev_uredi'),
-    path("skladiste/cijevi/detalji/<str:pk>/", views.cijev_detalji, name='cijev_detalji'),
-    path("skladiste/cijevi/izdaj/<str:pk>/", views.cijev_izdaj, name='cijev_izdaj'),
-    path("skladiste/cijevi/obrisi/<str:pk>/", views.cijev_obrisi, name='cijev_obrisi'),
-    path("skladiste/cijevi/reorder_level/<str:pk>/", views.cijev_reorder_level, name='cijev_reorder_level'),
-    path("skladiste/cijevi/history/", views.cijev_history, name='cijev_history'),
+#CIJEVI
+    path("skladiste/cijevi/", views.listcijev, name='listcijevi'),
+    path("skladiste/cijevi/novi_unos", views.cijev_dodaj, name='cijevi_dodaj'),
+    path("skladiste/cijevi/dodaj_tip", views.dodaj_tip, name='cijevi_dodaj_tip'),
+    path("skladiste/cijevi/uredi/<str:pk>", views.cijev_uredi, name='cijevi_uredi'),
+    path("skladiste/cijevi/detalji/<str:pk>/", views.cijev_detalji, name='cijevi_detalji'),
+    path("skladiste/cijevi/izdaj/<str:pk>/", views.cijev_izdaj, name='cijevi_izdaj'),
+    path("skladiste/cijevi/obrisi/<str:pk>/", views.cijev_obrisi, name='cijevi_obrisi'),
+    path("skladiste/cijevi/reorder_level/<str:pk>/", views.cijev_reorder_level, name='cijevi_reorder_level'),
+    path("skladiste/cijevi/history/", views.cijev_history, name='cijevi_history'),
 
 #MATERIJAL
     path("skladiste/materijal/", views.listmaterijal, name='listmaterijal'),

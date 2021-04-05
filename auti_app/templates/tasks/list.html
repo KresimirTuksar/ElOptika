@@ -1,7 +1,7 @@
 
 {% extends 'dash_base.html' %}
 
-{% block frame %}
+{% block content %}
 
   {% if messages %}
   <ul style="list-style: none;" class="alert alert-success messages">
@@ -14,7 +14,12 @@
     
       
       
+      {% if user.is_superuser %}
       <a class="btn btn-primary" href="{% url 'auti_app:dodaj_automobil' %}">Dodaj Automobil</a>
+      {% endif %}
+      <a href="{% url 'dash:dash' %}" class="btn btn-link" class>Natrag</a>
+        
+      
       <br>
       <br>
       
@@ -31,7 +36,7 @@
           <tbody>
             {% for auto in queryset %}
               
-              {% if auto.do_servisa <= 1000 %}
+              {% if auto.do_servisa <= 1000 or auto.istek_rege or auto.istek_atest %}
               <tr class="text-center alert alert-danger">
                 <td><a href="{% url 'auti_app:detalji' auto.id %} "><b>{{auto.ime}}</b></a></td>
                 <td>{{auto.marka}}</td>
@@ -58,7 +63,7 @@
       
       
     
-{% endblock frame %}
+{% endblock content %}
 
 
 {% block sidebar %}

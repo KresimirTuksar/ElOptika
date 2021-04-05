@@ -1,67 +1,79 @@
 {% extends 'dash_base.html' %}
 
+{% load static %}
 {% load widget_tweaks %}
 
-{% block frame %}
+{% block exthead %}
+    <link rel="stylesheet" href="{% static 'Skladiste/css/master.css' %}">
+{% endblock exthead %}
 
-{% if messages %}
-        <ul style="list-style: none;" class="alert alert-info messages">
-               {% for message in messages %}
-                     <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-               {% endfor %}
-       </ul>
-  {% endif %}
-
-<table class="table table-responsive-sm table-striped table-secondary">
-    <thead>
-        <th>Inventurni broj</th>
-        <th>Naziv</th>
-        <th>Vlasnik</th>
-        <th>Količina</th>
-        <th>Zadužio</th>
-        <th>Radnja</th>
-        <th>Posljednje ažuriranje</th>
-        
-    </thead>
-
-    {% for item in queryset %}
-        <tbody>
-            <tr>
-                <td>{{item.inv_broj}}</td>
-                <td>{{item.naziv}}</td>
-                <td>{{item.vlasnik}}</td>
-                <td>{{item.kolicina}}</td>
-                <td>{{item.izdano_na}}</td>
-                <td>{{item.radnja}}</td>
-                <td>{{item.zadnje_osvjezeno}}</td>
-            </tr>
-        </tbody>
-    {% endfor %}
-</table>   
-{% endblock frame %}
+{% block info %}
+    {% if messages %}
+    <ul style="list-style: none;" class="alert alert-info messages">
+        {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endblock info %}
     
-{% block sidebar %}
-    <div>
-        <a href="{% url 'skladiste_app:listmaterijal' %}">Materijal</a><br>
-        
-        
-        <div class="pretraga">
-            <h3>Pretraga</h3>
-            <form action="" method="POST">
-                {% csrf_token %}
-                {% for field in form %}
-                    {{field.label_tag}}
-                    {% render_field field class="form-control" %}
-                {% endfor %}
-                    
-                <input class="btn btn-outline-success btn-block" type="submit" value="Traži">
-            </form>
+{% block content %}
+<h1>History - Materijal</h1>
+
+
+<div class="row sadržaj">
+    <div class="col-sm-3 pretraga">
+        <div style="margin-top:15px" class="pretraga">
+            <!-- <h3>Pretraga</h3> -->
+            
+                <button class="btn btn-outline-success btn-block" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    Pretraga <span class="bi bi-search"></span>
+                </button>
+                <div class="collapse" id="collapseExample">
+                    <form action="" method="POST">
+                        
+                        {% include 'includes/searchform.html' %}
+                            
+                        
+                    </form>
+                </div>
         </div>
+    </div>
+    <div class="col-sm-9 skladiste">
+        <table class="table table-sm table-responsive-sm table-hover table-secondary thistory">
+            <thead>
+                <th>Inventurni broj</th>
+                <th>Naziv</th>
+                <th>vlasnik</th>
+                <th>Izdana količina</th>
+                <th>Zadužio</th>
+                <th>Radnja</th>
+                <th>Posljednje ažuriranje</th>
+                
+            </thead>
         
+            {% for item in queryset %}
+                <tbody>
+                    <tr>
+                        <td>{{item.inv_broj}}</td>
+                        <td>{{item.naziv}}</td>
+
+                        <td>{{item.vlasnik}}</td>
+                        <td>{{item.izdana_kolicina}}</td>
+                        <td>{{item.izdano_na}}</td>
+                        <td>{{item.radnja}}</td>
+                        <td>{{item.zadnje_osvjezeno}}</td>
+                    </tr>
+                </tbody>
+            {% endfor %}
+        </table>      
         
     </div>
     
-    <br>
+</div>
+
+
+{% endblock content %}
     
-{% endblock sidebar %}
+
     

@@ -1,0 +1,58 @@
+.dash-item{
+    height: 150px;
+    margin: 10px;
+    padding: 2px;
+    text-decoration: none;
+    font-size: 2.5em;
+}
+
+div>a{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+    font-size: 1.5em;
+    
+}
+a.dash-link1{
+    
+    background-color: rgb(197, 10, 10);
+    color:white;
+    text-decoration: none;
+    
+}
+
+a.dash-link2{
+    background-color: rgb(5, 148, 52);
+    color:white;
+    text-decoration: none;
+}
+
+a.dash-link3{
+    background-color: rgb(7, 10, 146);
+    color:white;
+    text-decoration: none;
+    
+}
+
+a.dash-link1:hover{
+    color:white;
+    background-color: rgb(146, 46, 46);
+}
+
+a.dash-link2:hover{
+    color:white;
+    background-color: rgb(53, 163, 86);
+}
+
+a.dash-link3:hover{
+    color:white;
+    background-color: rgb(53, 69, 163);
+}
+
+
+/* a:hover{
+    color:white;
+} */

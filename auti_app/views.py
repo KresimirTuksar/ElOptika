@@ -5,6 +5,8 @@ from django.db.models.query import InstanceCheckMeta, QuerySet
 from django.http import request
 from . forms import AutomobilCreateForm, AutomobilUpdateForm, KilometriForm
 from django.shortcuts import redirect, render
+from django.core.paginator import Paginator
+
 
 
 from . models import *
@@ -104,17 +106,19 @@ def kilometri(request, pk):
 
     return render(request, 'tasks/kilometri.html', context)
 
-@login_required
-def kilometraza(request):
-    queryset = Kilometraza.objects.all()
-    context = {'queryset':queryset}
 
-    return render(request, 'tasks/kilometraza.html', context)
+
+
 
 @login_required
 def kilometrilista(request, pk):
     queryset = Automobil.objects.get(id=pk)
-    queryset1 = Kilometraza.objects.filter(ime = queryset.ime)
-    context = {'queryset':queryset, 'queryset1':queryset1}
+    queryset1 = Kilometraza.objects.filter(ime = queryset.ime).order_by('-datum')
+
+    paginator = Paginator(queryset1, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj':page_obj, 'queryset':queryset}
 
     return render(request, 'tasks/kilometrilista.html', context)
+
