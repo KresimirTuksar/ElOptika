@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User
 import datetime
+from django.core.paginator import Paginator
 from . models import *
 
 
@@ -32,7 +33,7 @@ def dodaj_tip(request):
 @login_required
 def listoptika(request):
     form = OptikaSearchForm(request.POST)
-    queryset = KabelOptika.objects.all()
+    queryset = KabelOptika.objects.all().order_by('kreirano')
     context = {'queryset':queryset, 'form':form}
     
     
@@ -64,6 +65,11 @@ def listoptika(request):
         else:
 
             context = {'form':form, 'queryset':queryset}
+    
+    paginator = Paginator(queryset, 4)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj':page_obj, 'form':form, 'queryset':queryset}
     
     return render(request,'skladisteoptika.html', context )
 
@@ -217,6 +223,11 @@ def optika_history(request):
 
             context = {'form':form, 'queryset':queryset}
 
+    paginator = Paginator(queryset, 4)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj':page_obj, 'form':form, 'queryset':queryset}
+
     return render(request, 'optikahistory.html', context)
 ###############
 #kablovi - BAKAR
@@ -256,6 +267,11 @@ def listbakar(request):
         else:
 
             context = {'form':form, 'queryset':queryset}
+
+    paginator = Paginator(queryset, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj':page_obj, 'form':form, 'queryset':queryset}
     
     return render(request,'skladistebakar.html', context )
 
@@ -405,6 +421,11 @@ def bakar_history(request):
 
             context = {'form':form, 'queryset':queryset}
 
+    paginator = Paginator(queryset, 4)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj':page_obj, 'form':form, 'queryset':queryset}
+
     return render(request, 'bakarhistory.html', context)
 ###########################
 
@@ -445,7 +466,12 @@ def listutp(request):
         else:
 
             context = {'form':form, 'queryset':queryset}
-    
+
+    paginator = Paginator(queryset, 4)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj':page_obj, 'form':form, 'queryset':queryset}
+        
     return render(request,'skladisteutp.html', context )
 
 
@@ -592,10 +618,15 @@ def utp_history(request):
 
             context = {'form':form, 'queryset':queryset}
 
+    paginator = Paginator(queryset, 4)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj':page_obj, 'form':form, 'queryset':queryset}
+
     return render(request, 'utphistory.html', context)
 
 #################################
-#kablovi - BAKAR
+#kablovi - CIJEVI
 
 @login_required
 def listcijev(request):
@@ -632,6 +663,11 @@ def listcijev(request):
         else:
 
             context = {'form':form, 'queryset':queryset}
+
+    paginator = Paginator(queryset, 4)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj':page_obj, 'form':form, 'queryset':queryset}
     
     return render(request,'skladistecijevi.html', context )
 
@@ -783,6 +819,11 @@ def cijev_history(request):
 
             context = {'form':form, 'queryset':queryset}
 
+    paginator = Paginator(queryset, 4)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj':page_obj, 'form':form, 'queryset':queryset}
+
     return render(request, 'cijevihistory.html', context)
 ###########################
 
@@ -819,7 +860,12 @@ def listmaterijal(request):
         else:
 
             context = {'form':form, 'queryset':queryset}
-    
+
+    paginator = Paginator(queryset, 4)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj':page_obj, 'form':form, 'queryset':queryset}
+
     return render(request,'skladistematerijal.html', context )
 
 
@@ -963,6 +1009,11 @@ def materijal_history(request):
 
             context = {'form':form, 'queryset':queryset}
 
+    paginator = Paginator(queryset, 4)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj':page_obj, 'form':form, 'queryset':queryset}
+
     return render(request, 'materijalhistory.html', context)
 
 
@@ -998,7 +1049,12 @@ def listalat(request):
         else:
 
             context = {'form':form, 'queryset':queryset}
-    
+
+    paginator = Paginator(queryset, 4)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj':page_obj, 'form':form, 'queryset':queryset}
+
     return render(request,'skladistealat.html', context )
 
 

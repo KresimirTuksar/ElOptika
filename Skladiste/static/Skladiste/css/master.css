@@ -16,6 +16,7 @@ a.skl_ime:hover{
     background-color: aliceblue ;
 }
 .row.gumbi{
+    
     margin:10px 0px 0px 0px;
     padding: 0px px 0px px;
 }
@@ -25,6 +26,12 @@ a.skl_ime:hover{
     margin: 5px;
 }
 
+/* .sadrzaj{
+    overflow-y: auto;
+    
+}
+ */
 .thistory{
     margin-top: 15px;
 }
+

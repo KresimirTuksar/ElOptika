@@ -5,7 +5,15 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
+    <style>
+      html, body, .container
+{
+  height:90vh;
+}     
+      .sadrzaj{
+        height: 84%;
+      }
+    </style>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
@@ -25,14 +33,14 @@
         
         {% if user.is_authenticated %}
             <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
-                <a class="navbar-brand" href=" {% url 'elektro:home' %} ">glupi logo</a>
+                <a class="navbar-brand" href=" {% url 'elektro:home' %} ">El-Op</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
                 </button>
             
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav text-right mr-auto">
-                    <li class="nav-item active">
+                    <li class="nav-item">
                     <a class="nav-link" href="{% url 'auti_app:lista' %} ">Auti</a>
                     </li>
                     <li class="nav-item">
@@ -56,7 +64,7 @@
             </nav>
         {% else %}
             <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
-                <a class="navbar-brand" href=" {% url 'elektro:home' %} ">Navbar</a>
+                <a class="navbar-brand" href=" {% url 'elektro:home' %} ">El-Op</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
                 </button>
@@ -94,7 +102,7 @@
                    
     
 
-    <div class="container">
+    <!-- <div class="container"> -->
         
         {% block info %}
         
@@ -105,7 +113,7 @@
           
         {% endblock content %}
           
-    </div>
+    <!-- </div> -->
     
     
     

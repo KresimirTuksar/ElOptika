@@ -21,7 +21,7 @@
 <h1>Skladište - MATERIJAL</h1>
 
 
-<div class="row sadržaj">
+<div style=" overflow-y:auto;"class="row sadrzaj">
     <div class="col-sm-3 pretraga">
         <div style="margin-top:5px;padding-top:10px" class="pretraga">
             <!-- <h3>Pretraga</h3> -->
@@ -51,7 +51,7 @@
                 <th>Preostala količina</th>
             </thead>
         
-            {% for item in queryset %}
+            {% for item in page_obj %}
                 <tbody>
                     {% if item.kolicina <= item.reorder_level %}
                         <tr class="alert alert-danger">
@@ -74,6 +74,8 @@
         </table>   
         
     </div>
+    
+    {% include 'includes/pagination.html' %}
     
 </div>
 

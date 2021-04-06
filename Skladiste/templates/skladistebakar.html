@@ -21,7 +21,7 @@
 <h1>Skladište - BAKAR</h1>
 
 
-<div class="row sadržaj">
+<div style=" overflow-y:auto;"class="row sadrzaj">
     <div class="col-sm-3 pretraga">
         <div style="margin-top:15px" class="pretraga">
             <!-- <h3>Pretraga</h3> -->
@@ -59,7 +59,7 @@
                 <th>Preostalo metara</th>
             </thead>
         
-            {% for item in queryset %}
+            {% for item in page_obj %}
                 <tbody>
                     {% if item.metraza <= item.reorder_level %}
                         <tr class="alert alert-danger">
@@ -91,6 +91,7 @@
     
 </div>
 
+{% include 'includes/pagination.html' %}
 
 {% endblock content %}
     

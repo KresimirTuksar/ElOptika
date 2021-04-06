@@ -21,7 +21,7 @@
 <h1>Skladište - OPTIKA</h1>
 
 
-<div class="row sadržaj">
+<div style=" overflow-y:auto;"class="row sadrzaj">
     <div class="col-sm-3 pretraga">
         <div style="margin-top:5px;padding-top:10px" class="pretraga">
             <!-- <h3>Pretraga</h3> -->
@@ -40,12 +40,10 @@
                 <a href="{% url 'skladiste_app:optika_dodaj' %}"  class = "btn btn-success btn-block">Novi unos</a>
             </div>
             <div class="col-sm gumbi">
-                <a href="{% url 'skladiste_app:dodaj_tip' %}" class = "btn btn-primary btn-block">Novi tip kabela</a>
-            </div>
-            <div class="col-sm gumbi">
                 <a href="{% url 'skladiste_app:optika_history' %}" class = "btn btn-primary btn-block">History</a>
             </div>
         </div>
+        
         <table class="table table-sm  table-responsive-sm table-hover ">
             <thead>
                 <th>Inventurni broj</th>
@@ -57,7 +55,7 @@
                 <th>Preostalo metara</th>
             </thead>
         
-            {% for item in queryset %}
+            {% for item in page_obj %}
                 <tbody>
                     {% if item.metraza <= item.reorder_level %}
                         <tr class="alert alert-danger">
@@ -89,7 +87,7 @@
     
 </div>
 
-
+{% include 'includes/pagination.html' %}
 {% endblock content %}
     
 

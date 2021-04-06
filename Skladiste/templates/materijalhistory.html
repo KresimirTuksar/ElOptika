@@ -52,7 +52,7 @@
                 
             </thead>
         
-            {% for item in queryset %}
+            {% for item in page_obj %}
                 <tbody>
                     <tr>
                         <td>{{item.inv_broj}}</td>
@@ -72,6 +72,7 @@
     
 </div>
 
+{% include 'includes/pagination.html' %}
 
 {% endblock content %}
     
