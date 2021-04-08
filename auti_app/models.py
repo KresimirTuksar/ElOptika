@@ -10,7 +10,7 @@ class Automobil(models.Model):
     registracija_datum = models.DateField(verbose_name='Tehnički', null=False, blank=True)
     servis_datum = models.DateField(verbose_name='Zadnji servis',null=True, blank=True)
     servis_kilometri = models.IntegerField(verbose_name='Servis na', null=True, blank=True)
-    do_servisa = models.IntegerField(blank=True)
+    do_servisa = models.IntegerField(null=True,blank=True)
     atest = models.DateField(verbose_name='Atest vatrogasnog aparata', blank=True)
     #kilometraža
     pocetna = models.IntegerField(default=0, blank=True, verbose_name='Kilometraža')
